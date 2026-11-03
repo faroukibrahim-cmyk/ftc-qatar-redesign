@@ -28,6 +28,13 @@
   "download": ["Download", "تحميل"],
   "scope_title": ["Scope of work", "نطاق الأعمال"],
   "scope_lead": ["Seventeen product lines in five disciplines. Pick one to see the range.", "سبعة عشر خط منتجات في خمسة تخصصات. اختر أحدها لعرض التشكيلة."],
+  "read_more": ["Read more", "اقرأ المزيد"],
+  "close": ["Close", "إغلاق"],
+  "service_page": ["Open the services page", "افتح صفحة الخدمات"],
+  "vo_title": ["Visit our virtual office", "زر مكتبنا الافتراضي"],
+  "vo_lead": ["Meet the team in FTC Qatar's 3D office on OfficeVerse. Have an invite code? Join from your browser: nothing to install.", "قابل فريقنا في مكتب إف تي سي قطر ثلاثي الأبعاد على OfficeVerse. لديك رمز دعوة؟ انضم من متصفحك دون أي تثبيت."],
+  "vo_code": ["Invite code", "رمز الدعوة"], "vo_ph": ["e.g. FTC-7K2Q", "مثال: FTC-7K2Q"], "vo_join": ["Join on web", "انضم عبر الويب"],
+  "vo_note": ["Opens in a new tab. No code? Ask us for a guest pass", "يُفتح في نافذة جديدة. لا تملك رمزًا؟ اطلب منا تصريح زائر"],
   "history_more": ["Our full history", "تاريخنا الكامل"],
   "services_more": ["More about our services", "المزيد عن خدماتنا"],
   "solutions_title": ["Solutions", "الحلول"],
@@ -341,19 +348,19 @@
   "eyebrow": ["Our services", "خدماتنا"], "title": ["From the first drawing to the hundredth service visit.", "من الرسم الأول حتى زيارة الصيانة المئة."],
   "lead": ["Four services, one team. Engage us for one of them or for the whole life of the facility.", "أربع خدمات وفريق واحد. اعتمد علينا في إحداها أو طوال عمر المنشأة."],
   "items": [
-   {"slug": "engineering", "t": ["Engineering", "الهندسة"], "p": [
+   {"slug": "engineering", "t": ["Engineering", "الهندسة"], "s": ["Skilled engineers with the expertise to take on even the most complex engineering challenges.", "مهندسون أكفاء بخبرة تمكّنهم من مواجهة أعقد التحديات الهندسية."], "p": [
      ["Design, analysis, testing and project management by engineers who work across refrigeration, air conditioning, ventilation, renewable energy, storage systems and optimised logistics.", "تصميم وتحليل واختبار وإدارة مشاريع على يد مهندسين يعملون في التبريد والتكييف والتهوية والطاقة المتجددة وأنظمة التخزين واللوجستيات."],
      ["We use current software and tools for accuracy and efficiency, and put safety, sustainability and regulatory compliance into every design.", "نستخدم أحدث البرمجيات والأدوات لضمان الدقة والكفاءة، ونراعي السلامة والاستدامة والامتثال للأنظمة في كل تصميم."],
      ["Every project is different, so we work closely with each client on a solution that fits, delivered on time and within budget.", "لكل مشروع خصوصيته، لذلك نعمل عن قرب مع كل عميل للوصول إلى الحل المناسب، وننجزه في موعده وضمن ميزانيته."]]},
-   {"slug": "contracting", "t": ["Contracting", "المقاولات"], "p": [
+   {"slug": "contracting", "t": ["Contracting", "المقاولات"], "s": ["A full contracting service that brings projects to life, on time and within budget.", "خدمة مقاولات متكاملة تحوّل المشاريع إلى واقع، في موعدها وضمن ميزانيتها."], "p": [
      ["Our refrigeration, air conditioning, storage and renewable energy contractors have a proven record of delivering quality projects on time and within budget.", "يملك فريق مقاولات التبريد والتكييف والتخزين والطاقة المتجددة لدينا سجلًا مثبتًا في تسليم مشاريع عالية الجودة في موعدها وضمن ميزانيتها."],
      ["We work across commercial, industrial and residential projects, with modern equipment and our own crews for installation, testing and commissioning.", "نعمل في المشاريع التجارية والصناعية والسكنية، بمعدات حديثة وفرقنا الخاصة للتركيب والاختبار والتشغيل."],
      ["Sustainability and compliance are part of every job we build.", "الاستدامة والامتثال جزء من كل عمل ننفّذه."]]},
-   {"slug": "maintenance", "t": ["Maintenance", "الصيانة"], "p": [
+   {"slug": "maintenance", "t": ["Maintenance", "الصيانة"], "s": ["Reactive and preventive maintenance that keeps your equipment in top condition, 24/7.", "صيانة طارئة ووقائية تحافظ على معداتك في أفضل حال، على مدار الساعة."], "p": [
      ["Keeping your equipment running is critical to your business. Our technicians handle refrigeration plant, HVAC, generators and industrial equipment.", "استمرار عمل معداتك أمر حاسم لأعمالك. يتولى فنيّونا صيانة معدات التبريد والتكييف والمولدات والمعدات الصناعية."],
      ["Preventive maintenance plans built around your schedule and budget avoid costly downtime and extend equipment life.", "خطط صيانة وقائية مصمّمة وفق جدولك وميزانيتك تجنّبك التوقفات المكلفة وتطيل عمر المعدات."],
      ["For emergencies, the maintenance line answers 24/7.", "وللحالات الطارئة، يردّ خط الصيانة على مدار الساعة."]]},
-   {"slug": "supply-chain", "t": ["Supply chain consultancy", "استشارات سلاسل الإمداد"], "p": [
+   {"slug": "supply-chain", "t": ["Supply chain consultancy", "استشارات سلاسل الإمداد"], "s": ["Expert consultancy to optimise your supply chain and improve your bottom line.", "استشارات متخصصة لتطوير سلسلة الإمداد لديك وتحسين نتائج أعمالك."], "p": [
      ["Our consultants analyse your current supply chain, find where it can improve and build a strategy to optimise it: network design, inventory management, transport planning and more.", "يحلّل مستشارونا سلسلة الإمداد الحالية لديك، ويحدّدون فرص التحسين، ويضعون استراتيجية لتطويرها: تصميم الشبكة وإدارة المخزون وتخطيط النقل وغيرها."],
      ["With more than 20 years in supply chain consultancy, our specialists bring lower costs, higher efficiency and better customer satisfaction.", "بخبرة تتجاوز 20 عامًا في استشارات سلاسل الإمداد، يحقق مختصونا تكاليف أقل وكفاءة أعلى ورضا أكبر للعملاء."],
      ["We implement best practice, streamline processes and use technology to get results.", "نطبّق أفضل الممارسات ونبسّط العمليات ونوظّف التقنية لتحقيق النتائج."]]}

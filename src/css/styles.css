@@ -97,6 +97,9 @@ html[lang="ar"] .btn { font-family: var(--f-ar); text-transform: none; letter-sp
 .hero { position: relative; min-height: min(92vh, 880px); display: flex; align-items: flex-end; overflow: hidden; }
 .hero .bgimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.6) contrast(1.1); opacity: 0.38; }
 html[dir="rtl"] .hero .bgimg { transform: scaleX(-1); }
+/* v2: the footage has the photo as its poster, so the still is hidden while the video is there (no ghost double image) */
+.hero:has(video.bgimg) img.bgimg, .broch:has(video.bgimg) img.bgimg { display: none; }
+.hero video.bgimg { opacity: .5; }
 .hero .wrap { position: relative; width: 100%; padding-block: 120px 56px; }
 .hero h1 { font-size: clamp(40px, 10.5vw, 150px); max-width: 12ch; }
 .d { overflow-wrap: break-word; max-width: 100%; }
@@ -542,3 +545,85 @@ html[dir="rtl"] .hx.js .hx-p .hx-big { transform: translateX(24px); }
 .hx-b:hover { border-color: var(--acc); color: var(--acc); }
 html[dir="rtl"] .hx-b[data-hx] { } html[dir="rtl"] .hx-b[data-hx="prev"], html[dir="rtl"] .hx-b[data-hx="next"] { transform: scaleX(-1); }
 @media (prefers-reduced-motion: reduce) { .hx.js .hx-p, .hx.js .hx-p .hx-big, .hx-fill { transition: none; transform: none; } }
+
+/* Home services: icon cards that open the full write-up */
+.svc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+.svc-c { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; text-align: start; padding: 28px 26px; min-height: 300px; background: var(--bg); color: var(--fg); border: 1px solid var(--rule); border-radius: var(--r-lg); font: inherit; cursor: pointer; transition: border-color .3s, transform .45s var(--ease), box-shadow .45s, background-color .3s; }
+.svc-c .ico { width: 56px; height: 56px; color: var(--acc); margin-bottom: 8px; transition: transform .5s var(--ease); }
+.svc-c .d { font-size: 26px; font-weight: 700; line-height: 1.1; }
+.svc-c .s { font-size: 15px; line-height: 1.55; color: var(--fg-2); }
+.svc-c .go { margin-top: auto; color: var(--acc); font-size: 11px; opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .4s var(--ease); }
+.svc-c:hover, .svc-c:focus-visible { border-color: var(--acc); transform: translateY(-4px); box-shadow: 0 18px 40px -24px rgba(0,0,0,.45); outline: none; }
+.svc-c:hover .ico { transform: scale(1.08) rotate(-4deg); }
+.svc-c:hover .go, .svc-c:focus-visible .go { opacity: 1; transform: none; }
+@media (hover: none) { .svc-c .go { opacity: 1; transform: none; } }
+.svc-d { width: min(680px, calc(100% - 32px)); max-height: calc(100vh - 64px); padding: 36px; border: 1px solid var(--rule-2); border-radius: var(--r-lg); background: var(--bg); color: var(--fg); }
+.svc-d::backdrop { background: rgba(6,10,15,.6); backdrop-filter: blur(4px); }
+.svc-d[open] { animation: dlg .45s var(--ease); }
+@keyframes dlg { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+.svc-dh { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.svc-dh .ico { width: 44px; height: 44px; color: var(--acc); flex: none; }
+.svc-dh h3 { margin: 0; font-size: 30px; flex: 1; }
+.svc-dh .x { width: 44px; height: 44px; border: 1px solid var(--rule-2); border-radius: var(--r); background: none; color: var(--fg); font-size: 22px; cursor: pointer; }
+.svc-d .lead { color: var(--fg); margin: 0 0 16px; max-width: none; }
+.svc-d p { font-size: 16px; line-height: 1.65; color: var(--fg-2); }
+.svc-d .link { display: inline-block; margin-top: 8px; }
+.svc-ico .ico { width: 64px; height: 64px; color: var(--acc); margin-bottom: 20px; }
+.svc-t .svc-s { color: var(--fg); font-size: 21px; }
+
+/* Virtual office (OfficeVerse) panel, above the footer line on every page */
+.vo { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.1fr); gap: 20px 32px; align-items: center; margin-top: 56px; padding: 28px 32px; border: 1px solid var(--rule); border-radius: var(--r-lg); background: linear-gradient(120deg, color-mix(in srgb, var(--acc) 10%, transparent), transparent 60%); }
+.vo-i { width: 64px; height: 64px; display: grid; place-items: center; border-radius: var(--r); background: color-mix(in srgb, var(--acc) 14%, transparent); color: var(--acc); }
+.vo-i svg { width: 40px; height: 40px; }
+.vo-t { margin: 0 0 6px; font-size: clamp(22px, 2.4vw, 30px); color: var(--fg); }
+.vo-s { margin: 0; font-size: 14px; line-height: 1.55; color: var(--fg-2); }
+.vo-f label { display: block; color: var(--acc); font-size: 10px; margin-bottom: 8px; }
+.vo-row { display: flex; gap: 8px; }
+.vo-row input { flex: 1; min-width: 0; min-height: 50px; padding: 0 14px; font: 600 16px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; background: var(--bg-2); color: var(--fg); border: 1px solid var(--rule-2); border-radius: var(--r); }
+.vo-row input::placeholder { letter-spacing: .04em; text-transform: none; color: var(--mist); font-weight: 400; }
+.vo-row input:focus { outline: none; border-color: var(--acc); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 25%, transparent); }
+.vo-row .btn { flex: none; }
+.vo-n { margin: 10px 0 0; font-size: 10px; color: var(--mist); }
+.vo-n a { color: var(--acc); }
+@media (max-width: 900px) { .vo { grid-template-columns: auto minmax(0, 1fr); } .vo-f { grid-column: 1 / -1; } }
+@media (max-width: 480px) { .vo { padding: 22px; } .vo-row { flex-direction: column; } }
+
+/* Isometric duotone icons: faces take the accent at three strengths, on a lit tile; one part moves on hover */
+.ico-t { position: relative; display: grid; place-items: center; width: 84px; height: 84px; border-radius: 18px; flex: none;
+  background: radial-gradient(120% 90% at 30% 15%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 62%), color-mix(in srgb, var(--fg) 4%, var(--bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 26%, transparent), inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent), 0 10px 24px -14px color-mix(in srgb, var(--acc) 60%, transparent);
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+.ico-t .ico { width: 64px; height: 64px; overflow: visible; color: var(--acc); }
+.ico polygon, .ico polyline { stroke: var(--acc); stroke-width: .9; }
+.ico .t { fill: color-mix(in srgb, var(--acc) 34%, var(--bg)); }
+.ico .l { fill: color-mix(in srgb, var(--acc) 18%, var(--bg)); }
+.ico .r { fill: color-mix(in srgb, var(--acc) 9%, var(--bg)); }
+.ico .dk.t { fill: color-mix(in srgb, var(--fg) 22%, var(--bg)); } .ico .dk.l { fill: color-mix(in srgb, var(--fg) 12%, var(--bg)); } .ico .dk.r { fill: color-mix(in srgb, var(--fg) 6%, var(--bg)); }
+.ico .dk { stroke: color-mix(in srgb, var(--acc) 55%, var(--fg)); }
+.ico .acc.t { fill: color-mix(in srgb, var(--acc) 85%, #fff); } .ico .acc.l { fill: var(--acc); } .ico .acc.r { fill: color-mix(in srgb, var(--acc) 70%, #000); }
+.ico .a1 { fill: color-mix(in srgb, var(--acc) 14%, transparent); }
+.ico .a2 { fill: color-mix(in srgb, var(--acc) 55%, var(--bg)); }
+.ico .a3 { fill: var(--acc); stroke: color-mix(in srgb, var(--acc) 60%, #fff); }
+.ico polyline { fill: none; } .ico .k { stroke-opacity: .55; } .ico .k2 { stroke-width: 1.3; } .ico .k3 { stroke-width: 1.6; stroke-dasharray: 2 2.5; }
+.ico .sh { fill: color-mix(in srgb, var(--acc) 30%, transparent); filter: blur(2px); transition: transform .5s var(--ease), opacity .5s; transform-origin: 32px 60px; }
+.ico .mv { transform-box: fill-box; transform-origin: center; transition: transform .7s var(--ease); }
+a:hover .ico-t, button:hover .ico-t, a:focus-visible .ico-t, button:focus-visible .ico-t { transform: translateY(-5px); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 55%, transparent), inset 0 1px 0 color-mix(in srgb, #fff 18%, transparent), 0 18px 30px -14px color-mix(in srgb, var(--acc) 75%, transparent); }
+a:hover .ico .sh, button:hover .ico .sh { transform: scale(.8); opacity: .6; }
+a:hover .ico .spin, button:hover .ico .spin, a:hover .ico .spin2, a:hover .ico .spin3, button:hover .ico .spin4 { animation: icospin 1.6s linear infinite; }
+a:hover .ico .flo, button:hover .ico .flo { transform: translateY(-3px); }
+a:hover .ico .lift { transform: translateY(-5px); }
+a:hover .ico .up { transform: translateY(-4px); }
+a:hover .ico .air { animation: icoair .9s linear infinite; }
+a:hover .ico .fl { animation: icofl .8s ease-in-out infinite alternate; }
+a:hover .ico .tw { animation: icotw 1s ease-in-out infinite alternate; }
+@keyframes icospin { to { transform: rotate(360deg); } }
+@keyframes icoair { to { stroke-dashoffset: -9; } } .ico .air polyline { stroke-dasharray: 2 2.5; }
+@keyframes icofl { to { transform: scaleY(1.12) translateY(-1px); } }
+@keyframes icotw { to { transform: scale(1.2); opacity: .7; } }
+@media (prefers-reduced-motion: reduce) { .ico .mv, .ico-t { animation: none !important; transition: none; } }
+/* sizes per context */
+.sc-t .ico-t { width: 76px; height: 76px; } .sc-t .ico-t .ico { width: 58px; height: 58px; }
+.svc-c .ico-t { margin-bottom: 8px; }
+.svc-dh .ico-t { width: 60px; height: 60px; border-radius: 14px; } .svc-dh .ico-t .ico { width: 46px; height: 46px; }
+.svc-ico .ico-t { width: 96px; height: 96px; margin-bottom: 20px; } .svc-ico .ico-t .ico { width: 74px; height: 74px; }
+.svc-c .d { font-size: clamp(19px, 1.7vw, 23px); overflow-wrap: normal; hyphens: none; }

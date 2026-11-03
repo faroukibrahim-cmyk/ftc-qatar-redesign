@@ -106,6 +106,28 @@
     });
   });
 
+  // Virtual office: the invite code goes into FTC's OfficeVerse join link, opened in a new tab so this site stays open
+  [].forEach.call(document.querySelectorAll('form[data-ov]'), function (f) {
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!f.reportValidity()) return;
+      var code = f.querySelector('input').value.trim().toUpperCase();
+      window.open(f.getAttribute('data-ov').replace('{code}', encodeURIComponent(code)), '_blank', 'noopener');
+    });
+  });
+
+  // Service cards open their full write-up in a native dialog (Esc, the × button or a backdrop click closes it)
+  [].forEach.call(document.querySelectorAll('[data-dlg]'), function (b) {
+    var d = document.getElementById(b.getAttribute('data-dlg'));
+    if (!d || !d.showModal) return;
+    b.addEventListener('click', function () { d.showModal(); });
+    d.addEventListener('click', function (e) {
+      var r = d.getBoundingClientRect(), out = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      if (out || e.target.closest('[data-close]')) d.close();
+    });
+    d.addEventListener('close', function () { b.focus(); });
+  });
+
   // Interactive history: tabs on a rail, arrow keys, swipe, and an autoplay that stops for good once the visitor takes over
   [].forEach.call(document.querySelectorAll('[data-hx-root]'), function (root) {
     var tabs = [].slice.call(root.querySelectorAll('.hx-tab')), panels = [].slice.call(root.querySelectorAll('.hx-p'));

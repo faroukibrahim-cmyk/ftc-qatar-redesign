@@ -14,6 +14,10 @@ LANGS = ["en", "ar"]
 FILM_FRAMES = len(list((SRC / "film/d").glob("f*.webp"))) if (SRC / "film/d").exists() else 0
 FILM_CUTS = [0, 0.227, 0.487, 0.673, 0.859]  # where each journey step starts, as a share of the film (facility.py STEPS)
 PHONE_HEAD, PHONE_MAINT, PHONE_WH = "+974 4144 1800", "+974 3370 8096", "+974 3122 5566"
+# FTC's OfficeVerse web address. OfficeVerse runs on the company's own server, so this must be FTC's own join link;
+# {code} is replaced with the visitor's invite code. Placeholder until FTC's office is set up.
+OV_JOIN = "https://officeverse.es/?join={code}"
+OV_SITE = "https://officeverse.es/"
 WHATSAPP = "https://wa.me/97441441800"  # live site's wa.me/03035959 has no country code; confirm the real WhatsApp line with FTC
 esc = html.escape
 
@@ -180,6 +184,7 @@ def page(t, v, slug, title, desc, body, site_url):
 <div><span class="m">FTC Qatar</span><a href="{home}projects/">{esc(nav["projects"])}</a><br><a href="{home}services/">{esc(nav["services"])}</a><br><a href="{home}about/">{esc(nav["about"])}</a><br><a href="{home}contact/">{esc(contact)}</a><br><a href="/assets/ftc-qatar-brochure.pdf">{esc(L(CAT["ui"]["brochure"], lang))}</a></div>
 <div><span class="m">{esc(f["group"])}</span><a href="https://ftc-me.com/">FTC M.E.</a> · <a href="https://ftc-arabia.com/">FTC Arabia</a><br><a href="https://ftceurope.com/">FTC Europe</a> · <a href="https://afrigel.com/">Afrigel</a><br><a href="https://farjallah.com/leb">Farjallah Holding</a></div>
 </div>
+{vo_panel(t)}
 <div class="ftr-bot m"><span>{esc(f["copy"])}</span><span><a href="https://www.linkedin.com/company/ftc-qatar/">LinkedIn</a> · <a href="{home}contact/#jobs">{esc(f["careers"])}</a> · {esc(f["privacy"])} · <a href="https://sandruci.com/" rel="noopener">{"تصميم الموقع" if lang == "ar" else "Site by"} <bdi>sandruci.com</bdi></a></span></div>
 </div></footer>
 <nav class="qbar m" aria-label="{esc(nav["maintenance"])}"><a href="{tel(PHONE_MAINT)}">{esc(t["quickbar"]["call"])}</a><a href="{WHATSAPP}">{esc(t["quickbar"]["whatsapp"])}</a><a href="{home}#rfq">{esc(t["quickbar"]["quote"])}</a></nav>
@@ -223,7 +228,15 @@ def home_body(t, v):
         for i, (a, b, c, d) in enumerate(p["items"]))
     chips = "".join(f'<span class="chip m">{esc(x)}</span>' for x in p["sectors"])
     projs = "".join(proj_card(x, lang) for x in CAT["home_projects"])
-    svs = "".join(f'<div><div class="m acc">{esc(sv["step"])} {i + 1}</div><div class="d">{esc(a)}</div><p>{esc(b)}</p></div>' for i, (a, b) in enumerate(sv["items"]))
+    svs, dlgs = "", ""
+    for i, it in enumerate(CAT["services_page"]["items"]):
+        title = L(it["t"], lang)
+        svs += (f'<button type="button" class="svc-c" data-dlg="dlg-{it["slug"]}" aria-haspopup="dialog">{icon(it["slug"])}<span class="m acc">0{i + 1}</span>'
+                f'<span class="d">{esc(title)}</span><span class="s">{esc(L(it["s"], lang))}</span><span class="m go">{esc(L(u["read_more"], lang))} →</span></button>')
+        paras = "".join(f"<p>{esc(L(x, lang))}</p>" for x in it["p"])
+        dlgs += (f'<dialog class="svc-d" id="dlg-{it["slug"]}" aria-labelledby="dlg-{it["slug"]}-t"><div class="svc-dh">{icon(it["slug"])}'
+                 f'<h3 id="dlg-{it["slug"]}-t" class="d">{esc(title)}</h3><button type="button" class="x" data-close aria-label="{esc(L(u["close"], lang))}">×</button></div>'
+                 f'<p class="lead">{esc(L(it["s"], lang))}</p>{paras}<a class="m link" href="/{lang}/services/#{it["slug"]}">{esc(L(u["service_page"], lang))} →</a></dialog>')
     offices = "".join(
         f'<li data-lat="{lat}" data-lon="{lon}" data-kind="{kind}" data-city="{esc(city)}"><span style="font-weight:600">{esc(c)}</span><span class="m">{esc(co)}</span></li>'
         for c, co, kind, lat, lon, city in g["items"])
@@ -266,7 +279,7 @@ def home_body(t, v):
 <div class="cards3">{pcards}</div><div class="chips">{chips}</div></div></section>
 <section class="base bt" id="projects"><div class="wrap sec"><div class="sec-head"><div><p class="m eyebrow">{esc(pr["eyebrow"])}</p><h2 class="d h2">{esc(pr["title"])}</h2></div><a class="m link" href="/{lang}/projects/">{esc(pr["all"])} →</a></div>
 <div class="projects">{projs}</div></div></section>
-<section class="base bt" id="services" style="background:var(--bg-2)"><div class="wrap sec"><p class="m eyebrow">{esc(sv["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:52px;max-width:16ch">{esc(sv["title"])}</h2><div class="cols4">{svs}</div><a class="m link" style="display:inline-block;margin-top:40px" href="/{lang}/services/">{esc(L(u["services_more"], lang))} →</a></div></section>
+<section class="base bt" id="services" style="background:var(--bg-2)"><div class="wrap sec"><p class="m eyebrow">{esc(sv["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:52px;max-width:16ch">{esc(sv["title"])}</h2><div class="svc-grid">{svs}</div>{dlgs}<a class="m link" style="display:inline-block;margin-top:40px" href="/{lang}/services/">{esc(L(u["services_more"], lang))} →</a></div></section>
 <section class="base bt" id="group"><div class="wrap sec split" style="align-items:center">{gfig}
 <div><p class="m eyebrow">{esc(g["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:24px">{esc(g["title"])}</h2><p class="lead" style="margin:0 0 32px">{esc(g["lead"])}</p><ul class="offices" id="offices">{offices}</ul></div></div></section>
 <section class="alt" id="lineage"><div class="wrap sec"><p class="m eyebrow">{esc(ln["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:52px;max-width:15ch">{esc(ln["title"])}</h2>{history_block(t)}<a class="m link" style="display:inline-block;margin-top:40px" href="/{lang}/about/">{esc(L(u["history_more"], lang))} →</a></div></section>
@@ -375,30 +388,13 @@ def proj_card(slug, lang, small=False):
             f'<div class="m acc">{esc(tag)}</div><h3{" style=\"font-size:20px\"" if small else ""}>{esc(L(pj["title"], lang))}</h3><p>{esc(scope)}</p></a>')
 
 
-# Line icons for the scope-of-work grid (48x48, stroke = currentColor, so they follow the accent and theme)
-ICONS = {
-    "commercial-refrigeration": '<rect x="11" y="5" width="26" height="38" rx="2"/><path d="M11 17h26M15 10h4M15 23v10"/><path d="M27 26l4 4M31 26l-4 4M29 24v8"/>',
-    "industrial-refrigeration": '<rect x="5" y="20" width="38" height="18" rx="1"/><circle cx="14" cy="29" r="5"/><circle cx="29" cy="29" r="5"/><path d="M38 24v10M9 38v5M39 38v5M14 20V10h20v10M18 10V6h12v4"/>',
-    "ammonia-cooling": '<rect x="6" y="14" width="30" height="16" rx="8"/><path d="M12 30v8M30 30v8M8 38h26M36 22h6v-8"/><path d="M21 17v10M16.7 19.5l8.6 5M16.7 24.5l8.6-5"/>',
-    "cold-rooms": '<path d="M6 16l18-9 18 9v22l-18 7-18-7z"/><path d="M6 16l18 8 18-8M24 24v21"/><path d="M29 29l7-3v12l-7 3z"/>',
-    "air-conditioning": '<rect x="5" y="9" width="38" height="14" rx="3"/><path d="M10 18h28"/><path d="M14 28c0 4-3 4-3 8M24 28c0 4-3 4-3 8M34 28c0 4-3 4-3 8"/>',
-    "exhaust-ventilation": '<circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="3"/><path d="M24 21c-2-6 1-11 6-11-1 5-3 8-6 11zM27 24c6-2 11 1 11 6-5-1-8-3-11-6zM24 27c2 6-1 11-6 11 1-5 3-8 6-11zM21 24c-6 2-11-1-11-6 5 1 8 3 11 6z"/>',
-    "air-handling": '<path d="M4 18h28a6 6 0 010 12H4"/><path d="M38 21l6-3M38 27l6 3M40 24h5"/><path d="M10 30v3M17 30v3M24 30v3"/><path d="M4 14v20"/>',
-    "insulation": '<path d="M4 24h40"/><rect x="10" y="17" width="28" height="14" rx="7"/><rect x="14" y="13" width="20" height="22" rx="4"/><path d="M19 13v22M24 13v22M29 13v22"/>',
-    "fire-rated-materials": '<path d="M24 4c2 8 12 12 12 24a12 12 0 01-24 0c0-6 3-9 5-12 1 4 3 6 5 6-2-6 0-13 2-18z"/><path d="M24 44a5 5 0 01-5-5c0-4 5-6 5-11 3 4 5 7 5 11a5 5 0 01-5 5z"/>',
-    "insulated-panels": '<path d="M6 14l8-4 4 2v26l-8 4-4-2z"/><path d="M14 10v28M18 12l8-4 4 2v26l-8 4-4-2M26 8v28M30 10l8-4 4 2v26l-8 4-4-2M38 6v28"/>',
-    "hygiene-systems": '<path d="M5 42l7-16h24l7 16z"/><path d="M15 38l3-4M19 39l6-8"/><path d="M30 6l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM13 8l1 3 3 1-3 1-1 3-1-3-3-1 3-1z"/>',
-    "geocellular-tanks": '<path d="M4 20l20-10 20 10-20 10z"/><path d="M4 20v8l20 10 20-10v-8M24 30v8"/><path d="M12 16l20 10M18 13l20 10M16 24l20-10M10 21l20-10"/>',
-    "storage-racking": '<path d="M8 4v40M40 4v40M8 22h32M8 40h32"/><rect x="13" y="10" width="10" height="12"/><rect x="25" y="13" width="10" height="9"/><rect x="13" y="28" width="22" height="12"/><path d="M24 28v12"/>',
-    "industrial-doors": '<rect x="6" y="6" width="36" height="38"/><path d="M10 10h28v34M10 10v34M10 19h28M10 28h28M10 37h28"/><path d="M15 13h5M22 13h5M29 13h5"/>',
-    "material-handling": '<path d="M6 36V22l4-10h10l4 10v14z"/><path d="M6 22h18M28 6v32M28 36h16"/><circle cx="11" cy="38" r="4"/><circle cx="22" cy="38" r="4"/>',
-    "spare-parts": '<circle cx="31" cy="17" r="9"/><circle cx="31" cy="17" r="3"/><path d="M31 4v4M31 26v4M18 17h4M40 17h4M22 8l3 3M37 23l3 3M22 26l3-3M37 11l3-3"/><path d="M20 28L8 40a3 3 0 004 4l12-12"/>',
-    "valves-copper": '<path d="M4 30h12v-8h16v8h12M4 22v16M44 22v16"/><path d="M16 30v8h16v-8"/><path d="M24 22v-8M16 8h16M24 8v6"/>',
-}
+# Isometric duotone icons for the scope grid and services (tools/icons.py); tones come from the theme accent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from icons import ICONS  # noqa: E402
 
 
 def icon(slug):
-    return f'<svg class="ico" viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">{ICONS[slug]}</svg>'
+    return f'<span class="ico-t" aria-hidden="true"><svg class="ico" viewBox="0 0 64 64" stroke-linejoin="round" stroke-linecap="round">{ICONS[slug]}</svg></span>'
 
 
 def scope_grid(t):
@@ -436,6 +432,21 @@ def brochure_band(t, v):
             f'<a class="btn btn-p" href="/assets/ftc-qatar-brochure.pdf" download>{esc(L(u["download"], lang))} · PDF</a></div></section>')
 
 
+
+
+def vo_panel(t):
+    """Always-open 'join our virtual office' panel above the footer line: an invite code opens the OfficeVerse web app in a new tab."""
+    lang, u = t["lang"], CAT["ui"]
+    cube = ('<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true">'
+            '<path d="M6 15l18-9 18 9v18l-18 9-18-9z"/><path d="M6 15l18 9 18-9M24 24v18"/><path d="M15 28v-6l6 3v6z"/></svg>')
+    return (f'<form class="vo" id="virtual-office" data-ov="{esc(OV_JOIN)}" action="{OV_SITE}" method="get" target="_blank" rel="noopener">'
+            f'<span class="vo-i">{cube}</span><div class="vo-txt"><h2 class="vo-t d">{esc(L(u["vo_title"], lang))}</h2>'
+            f'<p class="vo-s">{esc(L(u["vo_lead"], lang))}</p></div>'
+            f'<div class="vo-f"><label class="m" for="ov-code-{lang}">{esc(L(u["vo_code"], lang))}</label>'
+            f'<div class="vo-row"><input id="ov-code-{lang}" name="join" required autocomplete="off" autocapitalize="characters" spellcheck="false" dir="ltr" '
+            f'placeholder="{esc(L(u["vo_ph"], lang))}" maxlength="32" pattern="[A-Za-z0-9-]{{4,32}}">'
+            f'<button type="submit" class="btn btn-p">{esc(L(u["vo_join"], lang))}</button></div>'
+            f'<p class="m vo-n">{esc(L(u["vo_note"], lang))} · <a href="{OV_SITE}" rel="noopener">officeverse.es</a></p></div></form>')
 
 def history_block(t):
     """Interactive history: a rail of years (tabs) and one story at a time. Without JS every milestone shows as a list."""
@@ -575,8 +586,8 @@ def services_body(t, v):
     for i, it in enumerate(sp["items"]):
         paras = "".join(f"<p>{esc(L(p, lang))}</p>" for p in it["p"])
         extra = f'<a class="btn btn-p" href="{tel(PHONE_MAINT)}">{esc(t["nav"]["maintenance"])} · {num(PHONE_MAINT)}</a>' if it["slug"] == "maintenance" else ""
-        out += (f'<section class="base bt svc" id="{it["slug"]}"><div class="wrap sec split" style="gap:56px"><div style="flex:1 1 340px"><div class="m acc">{esc(t["services"]["step"])} {i + 1}</div>'
-                f'<h2 class="d h2" style="font-size:clamp(34px,4.4vw,64px);margin-top:14px">{esc(L(it["t"], lang))}</h2></div><div class="svc-t" style="flex:2 1 520px">{paras}{extra}</div></div></section>')
+        out += (f'<section class="base bt svc" id="{it["slug"]}"><div class="wrap sec split" style="gap:56px"><div style="flex:1 1 340px"><div class="svc-ico">{icon(it["slug"])}</div><div class="m acc">0{i + 1}</div>'
+                f'<h2 class="d h2" style="font-size:clamp(34px,4.4vw,64px);margin-top:14px">{esc(L(it["t"], lang))}</h2></div><div class="svc-t" style="flex:2 1 520px"><p class="svc-s">{esc(L(it["s"], lang))}</p>{paras}{extra}</div></div></section>')
     return phero(t, [(t["nav"]["services"], None)], L(sp["eyebrow"], lang), L(sp["title"], lang), L(sp["lead"], lang)) + out + cta_band(t)
 
 
