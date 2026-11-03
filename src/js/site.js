@@ -128,6 +128,37 @@
     d.addEventListener('close', function () { b.focus(); });
   });
 
+  // Build phases (home): scroll or click picks a phase; the card under the figure explains it and the v2 model builds to it
+  (function () {
+    var steps = [].slice.call(document.querySelectorAll('#steps .step')), cards = [].slice.call(document.querySelectorAll('.pcard'));
+    if (!steps.length) return;
+    var cur = -1, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelector('.pcards').classList.add('js');
+    function pull(card) {
+      var n = card.querySelector('.pull-n'); if (!n) return;
+      var from = 35, to = +n.getAttribute('data-to'), t0 = performance.now(), dur = reduce ? 0 : 3200;
+      (function tick(now) {
+        var p = dur ? Math.min(1, (now - t0) / dur) : 1, e = 1 - Math.pow(1 - p, 2.2), v = Math.round(from + (to - from) * e);
+        n.textContent = (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v);
+        if (p < 1 && card.classList.contains('cur')) requestAnimationFrame(tick);
+      })(t0);
+    }
+    function pick(i) {
+      if (i === cur) return; cur = i;
+      steps.forEach(function (s, k) { if (k === i) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current'); });
+      cards.forEach(function (c, k) { c.classList.toggle('cur', k === i); });
+      pull(cards[i]);
+      window.ftcPhase = i;
+      dispatchEvent(new CustomEvent('ftc:phase', { detail: i }));
+    }
+    steps.forEach(function (s, k) { s.addEventListener('click', function () { pick(k); }); });
+    if ('IntersectionObserver' in window && matchMedia('(min-width: 761px)').matches) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) pick(steps.indexOf(e.target)); }); }, { rootMargin: '-45% 0px -45% 0px' });
+      steps.forEach(function (s) { io.observe(s); });
+    }
+    pick(0);
+  })();
+
   // Interactive history: tabs on a rail, arrow keys, swipe, and an autoplay that stops for good once the visitor takes over
   [].forEach.call(document.querySelectorAll('[data-hx-root]'), function (root) {
     var tabs = [].slice.call(root.querySelectorAll('.hx-tab')), panels = [].slice.call(root.querySelectorAll('.hx-p'));

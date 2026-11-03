@@ -138,8 +138,14 @@ def page(t, v, slug, title, desc, body, site_url):
     if v == "v2":
         scripts += ('<script type="importmap">{"imports":{"three":"/assets/vendor/three.module.min.js","three/addons/":"/assets/vendor/jsm/"}}</script>'
                     '<script type="module" src="/assets/js/film.js"></script>'
-                    '<script type="module" src="/assets/js/cutaway.js"></script><script type="module" src="/assets/js/globe.js"></script>')
+                    '<script type="module" src="/assets/js/cutaway.js"></script><script type="module" src="/assets/js/globe.js"></script>'
+                    '<script type="module" src="/assets/js/sound.js"></script>')
     f = t["footer"]
+    # v2: optional sound (src/js/v2/sound.js), off by default
+    sound_btn = (f'<button type="button" class="snd m" data-sound title="{esc(L(CAT["ui"]["sound_on"], lang))}" aria-pressed="false" data-on="{esc(L(CAT["ui"]["sound_on"], lang))}" data-off="{esc(L(CAT["ui"]["sound_off"], lang))}">'
+                 '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+                 '<path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16 9.5a3.5 3.5 0 010 5"/><path class="w2" d="M18.5 7a7 7 0 010 10"/></svg>'
+                 f'<span class="snd-l">{esc(L(CAT["ui"]["sound_on"], lang))}</span></button>') if v == "v2" else ""
     return f'''<!doctype html>
 <html lang="{lang}" dir="{t["dir"]}">
 <head>
@@ -169,7 +175,7 @@ def page(t, v, slug, title, desc, body, site_url):
 <nav class="nav" id="nav" aria-label="{esc(nav["menu"])}">{nav_html}</nav>
 <span class="spacer"></span>
 <a class="tel m" href="{tel(PHONE_MAINT)}">{esc(nav["maintenance"])} · {num(PHONE_MAINT)}</a>
-<a class="lang m" href="{alt_path}" hreflang="{other}" lang="{other}" aria-label="{esc(nav["switch_label"])}">{esc(nav["switch"])}</a>
+{sound_btn}<a class="lang m" href="{alt_path}" hreflang="{other}" lang="{other}" aria-label="{esc(nav["switch_label"])}">{esc(nav["switch"])}</a>
 <a class="btn btn-p q" href="{home}#rfq">{esc(nav["quote"])}</a>
 <button type="button" class="menu-btn" aria-controls="nav" aria-expanded="false" aria-label="{esc(nav["menu"])}">{icon_menu()}</button>
 </div></header>
@@ -201,17 +207,27 @@ def home_body(t, v):
     temps = "".join(f'<span>{esc(a)} <b>{num(b)}</b></span>' for a, b in h["temps"])
     stats = "".join(f'<div class="stat"><div class="d">{num(a)}</div><span class="m">{esc(b)}</span></div>' for a, b in t["stats"])
     marks = "".join(f"<span>{esc(x)}</span>" for x in t["landmarks"]["items"])
+    bd = CAT["build"]
     steps = "".join(
-        f'<li><button type="button" class="step" data-step="{i}"><span class="num m">0{i + 1}</span><span><span class="t">{esc(a)}</span><span class="s">{esc(b)}</span></span></button></li>'
-        for i, (a, b) in enumerate(j["steps"]))
+        f'<li><button type="button" class="step" data-step="{i}"{" aria-current=\"step\"" if i == 0 else ""}><span class="num m">0{i + 1}</span><span><span class="t">{esc(L(ph["t"], lang))}</span><span class="s">{esc(L(ph["s"], lang))}</span></span></button></li>'
+        for i, ph in enumerate(bd["phases"]))
+    pcards = ""
+    for i, ph in enumerate(bd["phases"]):
+        dos = "".join(f"<li>{esc(L(x, lang))}</li>" for x in ph["do"])
+        pull = (f'<div class="pull" aria-hidden="true"><span class="m muted">{esc(L(bd["ambient"], lang))} <b>+35 °C</b></span><span class="pull-n d" data-to="-22">+35</span>'
+                f'<span class="m muted">{esc(L(bd["inside"], lang))} °C</span></div>') if i == 6 else ""
+        pcards += (f'<div class="pcard{" cur" if i == 0 else ""}" data-card="{i}"><div class="m acc">{esc(L(bd["phase"], lang))} 0{i + 1} / 08</div>'
+                   f'<h3>{esc(L(ph["t"], lang))}</h3><div class="pc-g"><div><p class="m muted">{esc(L(bd["do"], lang))}</p><ul>{dos}</ul></div>'
+                   f'<div class="pc-get"><p class="m muted">{esc(L(bd["get"], lang))}</p><p>{esc(L(ph["get"], lang))}</p>{pull}</div></div></div>')
+    pcards = f'<div class="pcards" aria-live="polite">{pcards}</div><p class="m muted bnote">{esc(L(bd["note"], lang))}</p>'
     if v == "v2":
         parts = {k: {"t": a, "s": b} for k, (a, b) in j["parts"].items()}
         fig = (f'<figure class="fig"><div class="stage" id="cutaway" data-parts="{ja(parts)}" data-fallback="{esc(j["fallback"])}">'
                f'<div class="poster">{cutaway_svg(t)}</div>'
-               f'<div class="part-card" role="status" hidden></div></div>'
-               f'<figcaption class="m"><span>{esc(j["fig_caption"])}</span><span class="acc">{esc(j["fig_v2"])}</span></figcaption></figure>')
+               f'<div class="stage-phase m" aria-hidden="true"></div><div class="part-card" role="status" hidden></div></div>'
+               f'<figcaption class="m"><span>{esc(j["fig_caption"])}</span><span class="acc">{esc(j["fig_v2"])}</span></figcaption>{pcards}</figure>')
     else:
-        fig = f'<figure class="fig">{cutaway_svg(t)}<figcaption class="m"><span>{esc(j["fig_caption"])}</span><span class="acc">{esc(j["fig_v1"])}</span></figcaption></figure>'
+        fig = f'<figure class="fig">{cutaway_svg(t)}<figcaption class="m"><span>{esc(j["fig_caption"])}</span><span class="acc">{esc(j["fig_v1"])}</span></figcaption>{pcards}</figure>'
     cells = ""
     for i, it in enumerate(s["items"]):
         it = dict(it, page=["refrigeration", "hvac", "building-materials", "warehousing", "valves-copper"][i])
@@ -269,7 +285,7 @@ def home_body(t, v):
 <section class="base" aria-label="{esc(t["landmarks"]["label"])}"><div class="wrap marks m"><span class="acc">{esc(t["landmarks"]["label"])} →</span>{marks}</div></section>
 {film}
 <section class="alt-soft base bt" id="journey" style="background:var(--bg-2)"><div class="wrap sec split">
-<div><p class="m eyebrow">{esc(j["eyebrow"])}</p><h2 class="d h2">{esc(j["title"])}</h2><p class="lead" style="margin:24px 0 0">{esc(j["lead"])}</p><ol class="steps" id="steps">{steps}</ol></div>
+<div><p class="m eyebrow">{esc(L(bd["eyebrow"], lang))}</p><h2 class="d h2">{esc(L(bd["title"], lang))}</h2><p class="lead" style="margin:24px 0 0">{esc(L(bd["lead"], lang))}</p><ol class="steps" id="steps">{steps}</ol></div>
 {fig}</div></section>
 <section class="alt" id="solutions"><div class="wrap sec">
 <div class="sec-head"><div><p class="m eyebrow">{esc(s["eyebrow"])}</p><h2 class="d h2" style="max-width:14ch">{esc(s["title"])}</h2></div><p class="lead" style="margin:0;max-width:420px">{esc(s["lead"])}</p></div>
@@ -444,7 +460,7 @@ def vo_panel(t):
             f'<p class="vo-s">{esc(L(u["vo_lead"], lang))}</p></div>'
             f'<div class="vo-f"><label class="m" for="ov-code-{lang}">{esc(L(u["vo_code"], lang))}</label>'
             f'<div class="vo-row"><input id="ov-code-{lang}" name="join" required autocomplete="off" autocapitalize="characters" spellcheck="false" dir="ltr" '
-            f'placeholder="{esc(L(u["vo_ph"], lang))}" maxlength="32" pattern="[A-Za-z0-9-]{{4,32}}">'
+            f'placeholder="{esc(L(u["vo_ph"], lang))}" maxlength="32" pattern="[A-Za-z0-9\\-]{{4,32}}">'
             f'<button type="submit" class="btn btn-p">{esc(L(u["vo_join"], lang))}</button></div>'
             f'<p class="m vo-n">{esc(L(u["vo_note"], lang))} · <a href="{OV_SITE}" rel="noopener">officeverse.es</a></p></div></form>')
 
@@ -637,7 +653,7 @@ def build(site_urls):
         if (ROOT / "research/ftc-brochure-current.pdf").exists():
             shutil.copy(ROOT / "research/ftc-brochure-current.pdf", out / "assets/ftc-qatar-brochure.pdf")
         if v == "v2":
-            for f in ["cutaway.js", "globe.js", "film.js"]: shutil.copy(SRC / "js/v2" / f, out / "assets/js" / f)
+            for f in ["cutaway.js", "globe.js", "film.js", "sound.js"]: shutil.copy(SRC / "js/v2" / f, out / "assets/js" / f)
             shutil.copytree(SRC / "vendor/jsm", out / "assets/vendor/jsm")
             shutil.copytree(SRC / "models", out / "assets/models")
             if (SRC / "film").exists(): shutil.copytree(SRC / "film", out / "assets/film")
