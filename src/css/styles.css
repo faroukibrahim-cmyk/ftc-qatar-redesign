@@ -497,3 +497,48 @@ html[dir="rtl"] .broch::after { background: linear-gradient(270deg, rgba(6,10,15
 .broch .wrap { position: relative; z-index: 1; padding-block: clamp(80px, 11vw, 140px); display: flex; flex-wrap: wrap; align-items: center; gap: 20px 48px; }
 .broch h2 { font-size: clamp(36px, 5vw, 72px); margin: 0; flex: 1 1 100%; max-width: 14ch; }
 .broch .lead { margin: 0; color: #C9D6DF; flex: 1 1 360px; }
+
+/* Interactive history (home + About). Without JS: a plain list of every milestone. */
+.hx { --hx-t: 7s; }
+.hx-rail, .hx-ctl { display: none; }
+.hx-p { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px 56px; align-items: center; padding-block: 28px; border-top: 1px solid var(--rule); }
+.hx-big { white-space: nowrap; font-size: clamp(72px, 10.5vw, 156px); font-weight: 800; line-height: .82; color: transparent; -webkit-text-stroke: 1.5px var(--acc); letter-spacing: -.02em; }
+.hx-meta { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--mist); font-size: 11px; margin-bottom: 18px; }
+.hx-txt h3 { margin: 0 0 16px; font-size: clamp(28px, 3.4vw, 46px); font-weight: 750; line-height: 1.05; }
+.hx-txt p { margin: 0; font-size: 18px; line-height: 1.65; color: var(--fg-2); max-width: 58ch; }
+@media (max-width: 760px) { .hx-p { grid-template-columns: 1fr; } }
+
+.hx.js .hx-rail { display: flex; position: relative; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; padding: 8px 8px 10px; margin: -8px -8px 32px; }
+.hx.js .hx-rail::-webkit-scrollbar { display: none; }
+.hx-track { position: relative; display: flex; flex: 1 0 auto; min-width: 100%; }
+.hx-line { position: absolute; inset-inline: 12px; top: 11px; height: 2px; background: var(--rule-2); }
+.hx-fill { position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; background: var(--acc); transition: width .7s var(--ease); }
+.hx-tab { position: relative; flex: 1 0 96px; scroll-snap-align: center; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 0 12px 0 0; padding-inline: 0 12px; background: none; border: 0; color: var(--mist); cursor: pointer; font: inherit; text-align: start; }
+.hx-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--bg); border: 2px solid var(--rule-2); position: relative; z-index: 1; transition: border-color .3s, background-color .3s, transform .4s var(--ease); }
+.hx-y { font-family: var(--f-mono); font-size: 18px; font-weight: 600; transition: color .3s; }
+.hx-gap { font-size: 10px; color: var(--mist); opacity: .7; }
+.hx-tab:hover .hx-y, .hx-tab:focus-visible .hx-y { color: var(--fg); }
+.hx-tab:hover .hx-dot { border-color: var(--acc); }
+.hx-tab.past .hx-dot { border-color: var(--acc); background: var(--acc); transform: scale(.55); }
+.hx-tab[aria-selected="true"] .hx-dot { border-color: var(--acc); background: var(--bg); transform: scale(1.1); box-shadow: 0 0 0 6px color-mix(in srgb, var(--acc) 18%, transparent); }
+.hx-tab[aria-selected="true"] .hx-dot::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--acc); }
+.hx-tab[aria-selected="true"] .hx-y { color: var(--acc); }
+.hx-tab:focus-visible { outline: none; } .hx-tab:focus-visible .hx-dot { outline: 2px solid var(--acc); outline-offset: 3px; }
+/* the autoplay timer under the active year */
+.hx-tab::after { content: ""; position: absolute; inset-inline-start: 0; bottom: -6px; height: 2px; width: 0; background: var(--acc); }
+.hx.playing .hx-tab[aria-selected="true"]::after { animation: hxt var(--hx-t) linear forwards; }
+@keyframes hxt { to { width: calc(100% - 12px); } }
+
+.hx.js .hx-stage { display: grid; touch-action: pan-y; }
+.hx.js .hx-p { grid-area: 1 / 1; border: 0; padding: 0; opacity: 0; visibility: hidden; transform: translateY(18px); transition: opacity .55s var(--ease), transform .7s var(--ease), visibility 0s .7s; }
+.hx.js .hx-p.cur { opacity: 1; visibility: visible; transform: none; transition: opacity .55s var(--ease) .1s, transform .7s var(--ease) .1s, visibility 0s; }
+.hx.js .hx-p .hx-big { transform: translateX(-24px); transition: transform 1s var(--ease); }
+html[dir="rtl"] .hx.js .hx-p .hx-big { transform: translateX(24px); }
+.hx.js .hx-p.cur .hx-big, html[dir="rtl"] .hx.js .hx-p.cur .hx-big { transform: none; }
+@media (max-width: 760px) { .hx-big { font-size: 21vw; } }
+.hx.js .hx-ctl { display: flex; gap: 10px; margin-top: 40px; }
+.hx-b { min-width: 48px; min-height: 48px; padding: 0 16px; border: 1px solid var(--rule-2); border-radius: var(--r); background: none; color: var(--fg); font: inherit; font-size: 18px; cursor: pointer; transition: border-color .25s, color .25s; }
+.hx-b.m { font-size: 11px; }
+.hx-b:hover { border-color: var(--acc); color: var(--acc); }
+html[dir="rtl"] .hx-b[data-hx] { } html[dir="rtl"] .hx-b[data-hx="prev"], html[dir="rtl"] .hx-b[data-hx="next"] { transform: scaleX(-1); }
+@media (prefers-reduced-motion: reduce) { .hx.js .hx-p, .hx.js .hx-p .hx-big, .hx-fill { transition: none; transform: none; } }

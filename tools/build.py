@@ -180,7 +180,7 @@ def page(t, v, slug, title, desc, body, site_url):
 <div><span class="m">FTC Qatar</span><a href="{home}projects/">{esc(nav["projects"])}</a><br><a href="{home}services/">{esc(nav["services"])}</a><br><a href="{home}about/">{esc(nav["about"])}</a><br><a href="{home}contact/">{esc(contact)}</a><br><a href="/assets/ftc-qatar-brochure.pdf">{esc(L(CAT["ui"]["brochure"], lang))}</a></div>
 <div><span class="m">{esc(f["group"])}</span><a href="https://ftc-me.com/">FTC M.E.</a> · <a href="https://ftc-arabia.com/">FTC Arabia</a><br><a href="https://ftceurope.com/">FTC Europe</a> · <a href="https://afrigel.com/">Afrigel</a><br><a href="https://farjallah.com/leb">Farjallah Holding</a></div>
 </div>
-<div class="ftr-bot m"><span>{esc(f["copy"])}</span><span><a href="https://www.linkedin.com/company/ftc-qatar/">LinkedIn</a> · <a href="{home}contact/#jobs">{esc(f["careers"])}</a> · {esc(f["privacy"])}</span></div>
+<div class="ftr-bot m"><span>{esc(f["copy"])}</span><span><a href="https://www.linkedin.com/company/ftc-qatar/">LinkedIn</a> · <a href="{home}contact/#jobs">{esc(f["careers"])}</a> · {esc(f["privacy"])} · <a href="https://sandruci.com/" rel="noopener">{"تصميم الموقع" if lang == "ar" else "Site by"} <bdi>sandruci.com</bdi></a></span></div>
 </div></footer>
 <nav class="qbar m" aria-label="{esc(nav["maintenance"])}"><a href="{tel(PHONE_MAINT)}">{esc(t["quickbar"]["call"])}</a><a href="{WHATSAPP}">{esc(t["quickbar"]["whatsapp"])}</a><a href="{home}#rfq">{esc(t["quickbar"]["quote"])}</a></nav>
 {design_panel(t)}
@@ -243,7 +243,6 @@ def home_body(t, v):
                 f'<div style="position:relative"><ol class="film-steps">{fsteps}</ol>'
                 f'<div class="film-rail" aria-hidden="true"><span></span></div><p class="m film-note">{esc(fm["note"])}</p></div></div></div></section>')
     # all ten milestones from the original site (the shorter i18n list was a summary)
-    tl = "".join(f'<li><div class="d{" now" if a == "2008" else ""}">{num(a)}</div><p>{esc(L(b, lang))}</p></li>' for a, b in CAT["about"]["history"])
     opts = lambda xs: "".join(f"<option>{esc(x)}</option>" for x in xs)
     # v2 plays FTC's own warehouse footage behind the hero; site.js drops it for reduced motion / data saver
     video = ('<video class="bgimg" data-hero-video autoplay muted loop playsinline preload="metadata" poster="/assets/img/hero.jpg" aria-hidden="true">'
@@ -270,7 +269,7 @@ def home_body(t, v):
 <section class="base bt" id="services" style="background:var(--bg-2)"><div class="wrap sec"><p class="m eyebrow">{esc(sv["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:52px;max-width:16ch">{esc(sv["title"])}</h2><div class="cols4">{svs}</div><a class="m link" style="display:inline-block;margin-top:40px" href="/{lang}/services/">{esc(L(u["services_more"], lang))} →</a></div></section>
 <section class="base bt" id="group"><div class="wrap sec split" style="align-items:center">{gfig}
 <div><p class="m eyebrow">{esc(g["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:24px">{esc(g["title"])}</h2><p class="lead" style="margin:0 0 32px">{esc(g["lead"])}</p><ul class="offices" id="offices">{offices}</ul></div></div></section>
-<section class="alt" id="lineage"><div class="wrap sec"><p class="m eyebrow">{esc(ln["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:52px;max-width:15ch">{esc(ln["title"])}</h2><ol class="timeline tl10">{tl}</ol><a class="m link" style="display:inline-block;margin-top:40px" href="/{lang}/about/">{esc(L(u["history_more"], lang))} →</a></div></section>
+<section class="alt" id="lineage"><div class="wrap sec"><p class="m eyebrow">{esc(ln["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:52px;max-width:15ch">{esc(ln["title"])}</h2>{history_block(t)}<a class="m link" style="display:inline-block;margin-top:40px" href="/{lang}/about/">{esc(L(u["history_more"], lang))} →</a></div></section>
 {logo_strip(t)}
 {brochure_band(t, v)}
 <section class="base" id="rfq"><div class="wrap sec split">
@@ -437,6 +436,29 @@ def brochure_band(t, v):
             f'<a class="btn btn-p" href="/assets/ftc-qatar-brochure.pdf" download>{esc(L(u["download"], lang))} · PDF</a></div></section>')
 
 
+
+def history_block(t):
+    """Interactive history: a rail of years (tabs) and one story at a time. Without JS every milestone shows as a list."""
+    lang, a = t["lang"], CAT["about"]
+    hx, items, now = a["hx"], a["history"], 2026
+    tabs, panels = "", ""
+    for i, h in enumerate(items):
+        gap = int(h["y"]) - int(items[i - 1]["y"]) if i else 0
+        tabs += (f'<button type="button" role="tab" class="hx-tab" id="hx-t{i}" aria-controls="hx-p{i}" aria-selected="{"true" if i == 0 else "false"}"'
+                 f' tabindex="{0 if i == 0 else -1}"><span class="hx-dot" aria-hidden="true"></span><span class="hx-y">{num(h["y"])}</span>'
+                 + (f'<span class="hx-gap m" aria-hidden="true">+{gap}</span>' if gap else "") + '</button>')
+        panels += (f'<article class="hx-p{" cur" if i == 0 else ""}" role="tabpanel" id="hx-p{i}" aria-labelledby="hx-t{i}">'
+                   f'<div class="hx-big d" aria-hidden="true">{num(h["y"])}</div><div class="hx-txt">'
+                   f'<div class="hx-meta m"><span class="acc">{i + 1:02d} / {len(items):02d}</span><span>{esc(L(h["place"], lang))}</span>'
+                   f'<span>{num(str(now - int(h["y"])))} {esc(L(hx["ago"], lang))}</span></div>'
+                   f'<h3>{esc(L(h["t"], lang))}</h3><p>{esc(L(h["d"], lang))}</p></div></article>')
+    ctl = (f'<div class="hx-ctl"><button type="button" class="hx-b" data-hx="prev" aria-label="{esc(L(hx["prev"], lang))}">←</button>'
+           f'<button type="button" class="hx-b hx-play m" data-hx="play" data-pause="{esc(L(hx["pause"], lang))}" data-play="{esc(L(hx["play"], lang))}">{esc(L(hx["pause"], lang))}</button>'
+           f'<button type="button" class="hx-b" data-hx="next" aria-label="{esc(L(hx["next"], lang))}">→</button></div>')
+    return (f'<div class="hx" data-hx-root><div class="hx-rail" role="tablist" aria-label="{esc(L(hx["label"], lang))}">'
+            f'<div class="hx-track"><span class="hx-line" aria-hidden="true"><span class="hx-fill"></span></span>{tabs}</div></div>'
+            f'<div class="hx-stage">{panels}</div>{ctl}</div>')
+
 def solutions_body(t, v):
     lang, u = t["lang"], CAT["ui"]
     blocks = ""
@@ -531,7 +553,6 @@ def about_body(t, v):
     lang, a = t["lang"], CAT["about"]
     caps = "".join(f'<li><span class="m acc">{i + 1:02d}</span><span>{esc(L(x, lang))}</span></li>' for i, x in enumerate(a["caps"]))
     vals = "".join(f'<div><div class="m acc">{i + 1:02d}</div><div class="d">{esc(L(n, lang))}</div><p>{esc(L(d, lang))}</p></div>' for i, (n, d) in enumerate(a["values"]))
-    tl = "".join(f'<li><div class="d{" now" if y == "2008" else ""}">{num(y)}</div><p>{esc(L(d, lang))}</p></li>' for y, d in a["history"])
     stats = "".join(f'<div class="stat"><div class="d">{num(x)}</div><span class="m">{esc(y)}</span></div>' for x, y in t["stats"])
     g = t["group"]
     offices = "".join(f'<li><span style="font-weight:600">{esc(c)}</span><span class="m">{esc(co)}</span></li>' for c, co, *_ in g["items"])
@@ -542,7 +563,7 @@ def about_body(t, v):
               f'<div class="card"><div class="m acc">{esc(L(a["vision_t"], lang))}</div><div class="s" style="font-size:19px;color:inherit">{esc(L(a["vision"], lang))}</div></div>'
               f'<div class="card hl"><div class="m acc">{esc(L(a["mission_t"], lang))}</div><div class="s" style="font-size:19px;color:inherit">{esc(L(a["mission"], lang))}</div></div></div></div></section>'
             + f'<section class="base"><div class="wrap sec"><p class="m eyebrow">{esc(L(a["values_t"], lang))}</p><h2 class="d h2" style="margin-bottom:52px">{esc(L(a["values_t"], lang))}</h2><div class="cols4 vals">{vals}</div></div></section>'
-            + f'<section class="base bt" style="background:var(--bg-2)"><div class="wrap sec"><p class="m eyebrow">{esc(t["lineage"]["eyebrow"].split("·")[-1].strip())}</p><h2 class="d h2" style="margin-bottom:52px">{esc(L(a["history_t"], lang))}</h2><ol class="timeline">{tl}</ol></div></section>'
+            + f'<section class="base bt" style="background:var(--bg-2)"><div class="wrap sec"><p class="m eyebrow">{esc(t["lineage"]["eyebrow"].split("·")[-1].strip())}</p><h2 class="d h2" style="margin-bottom:52px">{esc(L(a["history_t"], lang))}</h2>{history_block(t)}</div></section>'
             + f'<section class="base bt"><div class="wrap sec split" style="align-items:center"><div><p class="m eyebrow">{esc(g["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:24px">{esc(g["title"])}</h2><p class="lead">{esc(g["lead"])}</p>'
               f'<a class="btn btn-o" style="margin-top:24px" href="/{lang}/contact/#companies">{esc(L(a["group_cta"], lang))}</a></div><ul class="offices">{offices}</ul></div></section>'
             + cta_band(t))
