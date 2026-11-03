@@ -67,19 +67,28 @@
     sync();
   }
 
-  // Quote form: no backend yet, so compose an email to FTC with the answers
-  var form = document.getElementById('rfq-form');
-  if (form) {
+  // Quote, contact and job forms: no backend yet, so each composes an email to FTC with the answers
+  [].forEach.call(document.querySelectorAll('form[data-subject]'), function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.reportValidity()) return;
       var lines = [];
       form.querySelectorAll('label').forEach(function (l) {
-        var f = l.querySelector('input, select');
+        var f = l.querySelector('input, select, textarea');
         if (f && f.value) lines.push(l.firstChild.textContent.trim() + ': ' + f.value);
       });
       location.href = 'mailto:info@ftc-qatar.com?subject=' + encodeURIComponent(form.getAttribute('data-subject')) +
         '&body=' + encodeURIComponent(lines.join('\n'));
     });
-  }
+  });
+
+  // Projects index: sector filter
+  [].forEach.call(document.querySelectorAll('.pfilter'), function (bar) {
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-f]'); if (!b) return;
+      var f = b.getAttribute('data-f');
+      [].forEach.call(bar.children, function (c) { c.classList.toggle('on', c === b); });
+      [].forEach.call(document.querySelectorAll('.pf'), function (p) { p.hidden = f !== '*' && p.getAttribute('data-s') !== f; });
+    });
+  });
 })();

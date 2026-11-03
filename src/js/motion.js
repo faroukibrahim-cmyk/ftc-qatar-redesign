@@ -9,7 +9,8 @@
   // Everything that rises into view. Siblings in the same parent are staggered.
   var SEL = ['section .eyebrow', 'section h2.d', 'section .lead', '.hero .btns', '.temps > span', '.stat', '.cell', '.card',
     '.chip', '.proj', '.cols4 > div', '.timeline > li', '.offices > li', '.rfq', '.fig', '.steps > li', '.brands-wall > span',
-    '.specs', '.tbl-box', 'details', '.crumb', '.globe', '.film-steps > li', '.ftr-grid > div', '.band .btns'].join(',');
+    '.specs', '.tbl-box', 'details', '.crumb', '.globe', '.film-steps > li', '.ftr-grid > div', '.band .btns',
+    '.lcard', '.prod', '.pf', '.scope > li', '.gal > .ph', '.cblocks > div', '.co > li', '.svc-t', '.next'].join(',');
   var els = [].slice.call(document.querySelectorAll(SEL)).filter(function (el) {
     return !el.closest('.film') && !el.closest('.dz');
   });

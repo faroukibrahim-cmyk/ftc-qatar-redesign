@@ -124,9 +124,14 @@ def page(t, v, slug, title, desc, body, site_url):
           "sameAs": ["https://www.linkedin.com/company/ftc-qatar/"], "foundingDate": "2008"}
     nav = t["nav"]
     home = f"/{lang}/"
-    links = [("solutions", home + "#solutions"), ("industries", home + "#industries"), ("projects", home + "#projects"),
-             ("group", home + "#group"), ("services", home + "#services"), ("about", home + "#lineage")]
-    nav_html = "".join(f'<a href="{h}"' + (' aria-current="page"' if (k == "solutions" and slug) else "") + f'>{esc(nav[k])}</a>' for k, h in links)
+    contact = L(CAT["ui"]["contact"], lang)
+    links = [("solutions", home + "solutions/", nav["solutions"]), ("projects", home + "projects/", nav["projects"]),
+             ("services", home + "services/", nav["services"]), ("about", home + "about/", nav["about"]),
+             ("group", home + "#group", nav["group"]), ("contact", home + "contact/", contact)]
+    top = slug.split("/")[0]
+    section = "solutions" if (top in PILLARS or top in LINES or top == "solutions") else top
+    nav_html = "".join(f'<a href="{h}"' + (' aria-current="page"' if k == section else "") + f'>{esc(label)}</a>' for k, h, label in links)
+    sitemap = "".join(f'<a href="{home}{p["slug"]}/">{esc(L(p["tag"], lang))}</a><br>' for p in CAT["pillars"])
     scripts = '<script src="/assets/js/site.js" defer></script><script src="/assets/js/motion.js" defer></script>'
     if v == "v2":
         scripts += ('<script type="importmap">{"imports":{"three":"/assets/vendor/three.module.min.js","three/addons/":"/assets/vendor/jsm/"}}</script>'
@@ -173,9 +178,11 @@ def page(t, v, slug, title, desc, body, site_url):
 <div><img src="/assets/img/logo-white.png" alt="{esc(t["brand"])}" width="89" height="44"><div>{esc(f["entity"])}<br>{f["address"]}</div></div>
 <div><span class="m">{esc(f["head"])}</span><a href="{tel(PHONE_HEAD)}">{num(PHONE_HEAD)}</a><br>{esc(f["hours"])}<br><a href="mailto:info@ftc-qatar.com">info@ftc-qatar.com</a></div>
 <div><span class="m">{esc(f["maint"])}</span><a href="{tel(PHONE_MAINT)}">{num(PHONE_MAINT)}</a><br><br><span class="m">{esc(f["warehouse"])}</span><a href="{tel(PHONE_WH)}">{num(PHONE_WH)}</a></div>
+<div><span class="m">{esc(nav["solutions"])}</span>{sitemap}</div>
+<div><span class="m">FTC Qatar</span><a href="{home}projects/">{esc(nav["projects"])}</a><br><a href="{home}services/">{esc(nav["services"])}</a><br><a href="{home}about/">{esc(nav["about"])}</a><br><a href="{home}contact/">{esc(contact)}</a><br><a href="/assets/ftc-qatar-brochure.pdf">{esc(L(CAT["ui"]["brochure"], lang))}</a></div>
 <div><span class="m">{esc(f["group"])}</span><a href="https://ftc-me.com/">FTC M.E.</a> · <a href="https://ftc-arabia.com/">FTC Arabia</a><br><a href="https://ftceurope.com/">FTC Europe</a> · <a href="https://afrigel.com/">Afrigel</a><br><a href="https://farjallah.com/leb">Farjallah Holding</a></div>
 </div>
-<div class="ftr-bot m"><span>{esc(f["copy"])}</span><span><a href="https://www.linkedin.com/company/ftc-qatar/">LinkedIn</a> · {esc(f["careers"])} · {esc(f["privacy"])}</span></div>
+<div class="ftr-bot m"><span>{esc(f["copy"])}</span><span><a href="https://www.linkedin.com/company/ftc-qatar/">LinkedIn</a> · <a href="{home}contact/#jobs">{esc(f["careers"])}</a> · {esc(f["privacy"])}</span></div>
 </div></footer>
 <nav class="qbar m" aria-label="{esc(nav["maintenance"])}"><a href="{tel(PHONE_MAINT)}">{esc(t["quickbar"]["call"])}</a><a href="{WHATSAPP}">{esc(t["quickbar"]["whatsapp"])}</a><a href="{home}#rfq">{esc(t["quickbar"]["quote"])}</a></nav>
 {design_panel(t)}
@@ -203,20 +210,20 @@ def home_body(t, v):
         fig = f'<figure class="fig">{cutaway_svg(t)}<figcaption class="m"><span>{esc(j["fig_caption"])}</span><span class="acc">{esc(j["fig_v1"])}</span></figcaption></figure>'
     cells = ""
     for i, it in enumerate(s["items"]):
+        it = dict(it, page=["refrigeration", "hvac", "building-materials", "warehousing", "valves-copper"][i])
         inner = (f'<div class="top m"><span>0{i + 1}</span><span>{esc(it["tag"])}</span></div><div class="d">{esc(it["title"])}</div>'
                  f'<div class="s">{esc(it["desc"])}</div><div class="brands m">{esc(it["brands"])}</div>')
         cells += f'<a class="cell" href="/{lang}/{it["page"]}/">{inner}</a>' if it.get("page") else f'<div class="cell">{inner}</div>'
     sc = s["service"]
     cells += (f'<div class="cell inv"><div class="top m"><span>06</span><span>{esc(sc["tag"])}</span></div><div class="d">{esc(sc["title"])}</div>'
-              f'<div class="s">{esc(sc["desc"])}</div><a class="brands m acc" style="color:var(--acc)" href="{tel(PHONE_MAINT)}">{esc(sc["call"])} · {num(PHONE_MAINT)} →</a></div>')
+              f'<div class="s">{esc(sc["desc"])}</div><a class="m" style="color:var(--fg)" href="/{lang}/after-sales/">{esc(L(CAT["pillars"][4]["title"], lang))} →</a>'
+              f'<a class="brands m acc" style="color:var(--acc);margin-top:0" href="{tel(PHONE_MAINT)}">{esc(sc["call"])} · {num(PHONE_MAINT)} →</a></div>')
     hrefs = ["#rfq", "#rfq", "#group"]
     pcards = "".join(
         f'<div class="card{" hl" if i == 1 else ""}"><div class="m muted">{esc(a)}</div><div class="d">{esc(b)}</div><div class="s">{esc(c)}</div><a class="go m" href="{hrefs[i]}">{esc(d)} →</a></div>'
         for i, (a, b, c, d) in enumerate(p["items"]))
     chips = "".join(f'<span class="chip m">{esc(x)}</span>' for x in p["sectors"])
-    projs = "".join(
-        f'<article class="proj"><div class="ph"><img src="/assets/img/{img}" alt="{esc(title)}" loading="lazy" width="768" height="576"></div><div class="m acc">{esc(tag)}</div><h3>{esc(title)}</h3><p>{esc(pr["scope"])}</p></article>'
-        for img, tag, title in pr["items"])
+    projs = "".join(proj_card(x, lang) for x in CAT["home_projects"])
     svs = "".join(f'<div><div class="m acc">{esc(sv["step"])} {i + 1}</div><div class="d">{esc(a)}</div><p>{esc(b)}</p></div>' for i, (a, b) in enumerate(sv["items"]))
     offices = "".join(
         f'<li data-lat="{lat}" data-lon="{lon}" data-kind="{kind}" data-city="{esc(city)}"><span style="font-weight:600">{esc(c)}</span><span class="m">{esc(co)}</span></li>'
@@ -258,7 +265,7 @@ def home_body(t, v):
 <div class="grid-cells">{cells}</div></div></section>
 <section class="base" id="industries"><div class="wrap sec"><p class="m eyebrow">{esc(p["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:52px">{esc(p["title"])}</h2>
 <div class="cards3">{pcards}</div><div class="chips">{chips}</div></div></section>
-<section class="base bt" id="projects"><div class="wrap sec"><div class="sec-head"><div><p class="m eyebrow">{esc(pr["eyebrow"])}</p><h2 class="d h2">{esc(pr["title"])}</h2></div><a class="m link" href="#projects">{esc(pr["all"])} →</a></div>
+<section class="base bt" id="projects"><div class="wrap sec"><div class="sec-head"><div><p class="m eyebrow">{esc(pr["eyebrow"])}</p><h2 class="d h2">{esc(pr["title"])}</h2></div><a class="m link" href="/{lang}/projects/">{esc(pr["all"])} →</a></div>
 <div class="projects">{projs}</div></div></section>
 <section class="base bt" id="services" style="background:var(--bg-2)"><div class="wrap sec"><p class="m eyebrow">{esc(sv["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:52px;max-width:16ch">{esc(sv["title"])}</h2><div class="cols4">{svs}</div></div></section>
 <section class="base bt" id="group"><div class="wrap sec split" style="align-items:center">{gfig}
@@ -285,12 +292,12 @@ def cold_body(t, v):
     head = "".join(f'<th scope="col" class="m">{esc(x)}</th>' for x in c["cols"])
     rows = "".join(f'<tr><th scope="row">{esc(a)}</th><td>{esc(b)}</td><td>{esc(cc)}</td><td class="m">{esc(d)}</td></tr>' for a, b, cc, d in c["rows"])
     proc = "".join(f'<li><div class="m acc">0{i + 1}</div><div style="font-size:19px;font-weight:700;margin:10px 0 8px">{esc(a)}</div><p>{esc(b)}</p></li>' for i, (a, b) in enumerate(c["process"]))
-    rel = "".join(f'<article class="proj"><div class="ph"><img src="/assets/img/{img}" alt="{esc(tt)}" loading="lazy" style="aspect-ratio:16/10" width="768" height="480"></div><div class="m acc">{esc(tag)}</div><h3 style="font-size:20px">{esc(tt)}</h3></article>' for img, tag, tt in c["related"])
+    rel = "".join(proj_card(x, lang, True) for x in ["al-raed", "al-asmakh", "gwc-ras-laffan"])
     faq = "".join(f"<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in c["faq"])
     ds = "".join(f'<a class="chip m" href="/assets/ftc-qatar-brochure.pdf">{esc(x)}</a>' for x in c["datasheets"])
     return f'''
 <section class="base"><div class="wrap" style="padding-block:56px 96px">
-<nav aria-label="Breadcrumb" class="crumb m"><a href="/{lang}/">{esc(nav["home"])}</a><span aria-hidden="true">/</span><a href="/{lang}/#solutions">{esc(nav["solutions"])}</a><span aria-hidden="true">/</span><span>{esc(nav["refrigeration"])}</span><span aria-hidden="true">/</span><span aria-current="page">{esc(nav["cold_rooms"])}</span></nav>
+<nav aria-label="Breadcrumb" class="crumb m"><a href="/{lang}/">{esc(nav["home"])}</a><span aria-hidden="true">/</span><a href="/{lang}/solutions/">{esc(nav["solutions"])}</a><span aria-hidden="true">/</span><a href="/{lang}/refrigeration/">{esc(nav["refrigeration"])}</a><span aria-hidden="true">/</span><span aria-current="page">{esc(nav["cold_rooms"])}</span></nav>
 <div class="split" style="margin-top:56px;align-items:flex-end;gap:56px">
 <div style="flex:1 1 620px"><p class="m eyebrow" style="margin-bottom:24px">{esc(c["eyebrow"])}</p><h1 class="d" style="font-size:clamp(48px,8vw,128px);line-height:.88">{esc(c["title"])}</h1><p class="lead" style="margin:32px 0 0;font-size:19px;max-width:600px">{esc(c["lead"])}</p></div>
 <dl class="specs">{spec}</dl></div></div></section>
@@ -299,12 +306,224 @@ def cold_body(t, v):
 <div><p class="m eyebrow">{esc(c["anatomy_eyebrow"])}</p><h2 class="d h2" style="font-size:clamp(34px,4.4vw,64px)">{esc(c["anatomy_title"])}</h2><ol class="steps">{parts}</ol></div></div></section>
 <section class="base"><div class="wrap sec"><p class="m eyebrow">{esc(c["choose_eyebrow"])}</p><h2 class="d h2" style="font-size:clamp(34px,4.4vw,64px);margin-bottom:48px">{esc(c["choose_title"])}</h2>
 <div class="tbl-box"><table><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div></div></section>
+<section class="base bt" style="background:var(--bg-2)"><div class="wrap sec"><h2 class="d h2" style="font-size:clamp(30px,3.6vw,52px);margin-bottom:40px">{esc(L(CAT["ui"]["range"], lang))}</h2>{products_grid(LINES["cold-rooms"], lang)}</div></section>
 <section class="alt"><div class="wrap sec"><p class="m eyebrow">{esc(c["process_eyebrow"])}</p><h2 class="d h2" style="font-size:clamp(34px,4.4vw,64px);margin-bottom:48px">{esc(c["process_title"])}</h2><ol class="timeline">{proc}</ol></div></section>
 <section class="base"><div class="wrap sec"><div class="sec-head" style="margin-bottom:40px"><h2 class="d" style="font-size:clamp(30px,3.6vw,52px)">{esc(c["related_title"])}</h2><div class="chips" style="margin:0">{ds}</div></div><div class="projects">{rel}</div></div></section>
 <section class="base bt"><div class="wrap sec split" style="gap:56px"><h2 class="d" style="flex:1 1 300px;font-size:clamp(30px,3.6vw,52px)">{esc(c["faq_title"])}</h2><div style="flex:2 1 540px">{faq}</div></div></section>
 <section class="band"><div class="wrap" style="padding-block:88px;display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:space-between">
 <h2 class="d" style="font-size:clamp(40px,5.4vw,84px);max-width:13ch">{esc(c["cta_title"])}</h2>
 <div class="btns"><a class="btn btn-dark" href="/{lang}/#rfq">{esc(c["cta"])}</a><a class="btn btn-line" style="border:1px solid" href="{tel(PHONE_HEAD)}">{num(PHONE_HEAD)}</a></div></div></section>'''
+
+
+# ---- Catalogue pages (src/i18n/catalog.json: [en, ar] pairs) ----
+CAT = json.loads((SRC / "i18n" / "catalog.json").read_text("utf-8"))
+PILLARS = {x["slug"]: x for x in CAT["pillars"]}
+LINES = {x["slug"]: x for x in CAT["lines"]}
+PROJECTS = {x["slug"]: x for x in CAT["projects"]}
+
+
+def L(x, lang):
+    """Pick the language from an [en, ar] pair; plain strings pass through."""
+    return x[0 if lang == "en" else 1] if isinstance(x, list) else x
+
+
+def crumbs(t, *trail):
+    lang, nav = t["lang"], t["nav"]
+    parts = [f'<a href="/{lang}/">{esc(nav["home"])}</a>']
+    for i, (label, href) in enumerate(trail):
+        last = i == len(trail) - 1
+        parts.append(f'<span aria-current="page">{esc(label)}</span>' if last or not href else f'<a href="{href}">{esc(label)}</a>')
+    return '<nav aria-label="Breadcrumb" class="crumb m">' + '<span aria-hidden="true">/</span>'.join(parts) + '</nav>'
+
+
+def phero(t, trail, eyebrow, title, lead, side=""):
+    return (f'<section class="base phero"><div class="wrap" style="padding-block:56px 88px">{crumbs(t, *trail)}'
+            f'<div class="split" style="margin-top:56px;align-items:flex-end;gap:56px"><div style="flex:1 1 620px">'
+            f'<p class="m eyebrow" style="margin-bottom:24px">{esc(eyebrow)}</p><h1 class="d">{esc(title)}</h1>'
+            + (f'<p class="lead" style="margin:32px 0 0;font-size:19px;max-width:620px">{esc(lead)}</p>' if lead else "")
+            + f'</div>{side}</div></div></section>')
+
+
+def cta_band(t, title=None):
+    u, lang = CAT["ui"], t["lang"]
+    return (f'<section class="band"><div class="wrap" style="padding-block:80px;display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:space-between">'
+            f'<h2 class="d" style="font-size:clamp(36px,5vw,76px);max-width:14ch">{esc(title or L(u["cta_title"], lang))}</h2>'
+            f'<div class="btns"><a class="btn btn-dark" href="/{lang}/#rfq">{esc(L(u["cta"], lang))}</a>'
+            f'<a class="btn btn-line" style="border:1px solid" href="{tel(PHONE_HEAD)}">{num(PHONE_HEAD)}</a></div></div></section>')
+
+
+def pimg(name, alt, cls="plate"):
+    if not name:
+        return f'<div class="{cls} none" aria-hidden="true"><span class="m">FTC</span></div>'
+    return f'<div class="{cls}"><img src="/assets/img/p/{name}.webp" alt="{esc(alt)}" loading="lazy" width="800" height="600"></div>'
+
+
+def line_card(slug, lang, i=None):
+    ln = LINES[slug]
+    img = next((it["img"] for it in ln["items"] if it["img"]), None)
+    top = f'<span>{i + 1:02d}</span>' if i is not None else ""
+    return (f'<a class="lcard" href="/{lang}/{slug}/">{pimg(img, L(ln["title"], lang))}<div class="lc-b">'
+            f'<div class="top m">{top}<span>{len(ln["items"])} {esc(L(CAT["ui"]["items"], lang))}</span></div>'
+            f'<h3>{esc(L(ln["title"], lang))}</h3><p>{esc(L(ln["lead"], lang))}</p></div></a>')
+
+
+def proj_card(slug, lang, small=False):
+    pj = PROJECTS[slug]
+    tag = f'{L(pj["sector"], lang)} · {L(pj["place"], lang)}'
+    scope = " · ".join(L(x, lang) for x in pj["scope"][:2])
+    return (f'<a class="proj" href="/{lang}/projects/{slug}/"><div class="ph"><img src="/assets/img/ref/{pj["imgs"][0]}.webp" alt="{esc(L(pj["title"], lang))}" loading="lazy" width="1200" height="900"></div>'
+            f'<div class="m acc">{esc(tag)}</div><h3{" style=\"font-size:20px\"" if small else ""}>{esc(L(pj["title"], lang))}</h3><p>{esc(scope)}</p></a>')
+
+
+def solutions_body(t, v):
+    lang, u = t["lang"], CAT["ui"]
+    blocks = ""
+    for k, pl in enumerate(CAT["pillars"]):
+        cards = "".join(line_card(s, lang) for s in pl["lines"])
+        blocks += (f'<section class="base bt"><div class="wrap sec"><div class="sec-head"><div><p class="m eyebrow">0{k + 1} · {esc(L(pl["tag"], lang))}</p>'
+                   f'<h2 class="d h2" style="font-size:clamp(34px,4.4vw,64px)"><a href="/{lang}/{pl["slug"]}/">{esc(L(pl["title"], lang))}</a></h2></div>'
+                   f'<p class="lead" style="margin:0;max-width:420px">{esc(L(pl["lead"], lang))}</p></div><div class="lgrid">{cards}</div></div></section>')
+    return phero(t, [(t["nav"]["solutions"], None)], L(u["solutions_title"], lang), t["solutions"]["title"], L(u["solutions_lead"], lang)) + blocks + cta_band(t)
+
+
+def pillar_body(t, v, pl):
+    lang, u = t["lang"], CAT["ui"]
+    cards = "".join(line_card(s, lang, i) for i, s in enumerate(pl["lines"]))
+    projs = []
+    for s in pl["lines"]:
+        projs += [p for p in LINES[s]["projects"] if p not in projs]
+    side = f'<dl class="specs"><div><dt class="m">{esc(L(u["brands"], lang))}</dt><dd class="m">{esc(pl["brands"])}</dd></div></dl>'
+    body = phero(t, [(t["nav"]["solutions"], f"/{lang}/solutions/"), (L(pl["tag"], lang), None)], L(pl["tag"], lang), L(pl["title"], lang), L(pl["lead"], lang), side)
+    body += f'<section class="alt"><div class="wrap sec"><p class="m eyebrow">{esc(L(u["lines_in"], lang))}</p><div class="lgrid" style="margin-top:32px">{cards}</div></div></section>'
+    if projs:
+        body += (f'<section class="base"><div class="wrap sec"><div class="sec-head"><h2 class="d h2" style="font-size:clamp(30px,3.6vw,52px)">{esc(L(u["related_projects"], lang))}</h2>'
+                 f'<a class="m link" href="/{lang}/projects/">{esc(L(u["all_projects"], lang))} →</a></div><div class="projects">{"".join(proj_card(p, lang) for p in projs[:6])}</div></div></section>')
+    return body + cta_band(t)
+
+
+def products_grid(ln, lang):
+    u = CAT["ui"]
+    out = ""
+    for i, it in enumerate(ln["items"]):
+        name = L(it["name"], lang)
+        out += (f'<article class="prod">{pimg(it["img"], name)}<div class="pb"><div class="m acc">{i + 1:02d}</div><h3>{esc(name)}</h3>'
+                f'<p>{esc(L(it["desc"], lang))}</p><a class="m go" href="/{lang}/#rfq">{esc(L(u["enquire"], lang))} →</a></div></article>')
+    return f'<div class="pgrid">{out}</div>'
+
+
+def line_body(t, v, ln):
+    lang, u = t["lang"], CAT["ui"]
+    pl = PILLARS[ln["pillar"]]
+    side = (f'<dl class="specs"><div><dt class="m">{esc(L(u["products"], lang))}</dt><dd class="m">{num(str(len(ln["items"])))}</dd></div>'
+            f'<div><dt class="m">{esc(L(u["brands"], lang))}</dt><dd class="m acc">{esc(ln["brands"])}</dd></div></dl>')
+    body = phero(t, [(t["nav"]["solutions"], f"/{lang}/solutions/"), (L(pl["tag"], lang), f"/{lang}/{pl['slug']}/"), (L(ln["title"], lang), None)],
+                 L(pl["title"], lang), L(ln["title"], lang), L(ln["lead"], lang), side)
+    body += (f'<section class="alt-soft base bt" style="background:var(--bg-2)"><div class="wrap sec"><div class="sec-head"><h2 class="d h2" style="font-size:clamp(30px,3.6vw,52px)">{esc(L(u["range"], lang))}</h2>'
+             f'<a class="chip m" href="/assets/ftc-qatar-brochure.pdf">{esc(L(u["brochure"], lang))}</a></div>{products_grid(ln, lang)}</div></section>')
+    if ln["projects"]:
+        body += (f'<section class="base"><div class="wrap sec"><h2 class="d" style="font-size:clamp(30px,3.6vw,52px);margin-bottom:40px">{esc(L(u["related_projects"], lang))}</h2>'
+                 f'<div class="projects">{"".join(proj_card(p, lang, True) for p in ln["projects"])}</div></div></section>')
+    others = [s for s in pl["lines"] if s != ln["slug"]]
+    if others:
+        body += (f'<section class="base bt"><div class="wrap sec"><p class="m eyebrow">{esc(L(u["other_lines"], lang))} {esc(L(pl["title"], lang))}</p>'
+                 f'<div class="lgrid" style="margin-top:32px">{"".join(line_card(s, lang) for s in others)}</div></div></section>')
+    return body + cta_band(t)
+
+
+def projects_body(t, v):
+    lang, pp, u = t["lang"], CAT["projects_page"], CAT["ui"]
+    sectors = []
+    for pj in CAT["projects"]:
+        if pj["sector"][0] not in [s[0] for s in sectors]: sectors.append(pj["sector"])
+    chips = f'<button type="button" class="chip m on" data-f="*">{esc(L(u["filter_all"], lang))}</button>' + "".join(
+        f'<button type="button" class="chip m" data-f="{esc(s[0])}">{esc(L(s, lang))}</button>' for s in sectors)
+    cards = "".join(f'<div class="pf" data-s="{esc(pj["sector"][0])}">{proj_card(pj["slug"], lang)}</div>' for pj in CAT["projects"])
+    return (phero(t, [(L(pp["title"], lang), None)], L(pp["eyebrow"], lang), L(pp["title"], lang), L(pp["lead"], lang))
+            + f'<section class="base bt"><div class="wrap sec"><div class="chips pfilter" style="margin:0 0 40px">{chips}</div><div class="projects">{cards}</div></div></section>' + cta_band(t))
+
+
+def project_body(t, v, pj):
+    lang, u, pp = t["lang"], CAT["ui"], CAT["projects_page"]
+    title = L(pj["title"], lang)
+    side = (f'<dl class="specs"><div><dt class="m">{esc(t["nav"]["industries"])}</dt><dd class="m">{esc(L(pj["sector"], lang))}</dd></div>'
+            f'<div><dt class="m">{"الموقع" if lang == "ar" else "Location"}</dt><dd class="m acc">{esc(L(pj["place"], lang))}</dd></div></dl>')
+    body = phero(t, [(L(pp["title"], lang), f"/{lang}/projects/"), (title, None)], f'{L(pj["sector"], lang)} · {L(pj["place"], lang)}', title, "", side)
+    imgs = pj["imgs"]
+    gal = "".join(f'<div class="ph"><img src="/assets/img/ref/{im}.webp" alt="{esc(title)}" loading="{"eager" if i == 0 else "lazy"}" width="1200" height="800"></div>' for i, im in enumerate(imgs))
+    body += f'<section class="base"><div class="wrap"><div class="gal n{min(len(imgs), 3)}">{gal}</div></div></section>'
+    scope = "".join(f'<li><span class="m acc">{i + 1:02d}</span><span>{esc(L(x, lang))}</span></li>' for i, x in enumerate(pj["scope"]))
+    lines = "".join(f'<a class="chip m" href="/{lang}/{s}/">{esc(L(LINES[s]["title"], lang))}</a>' for s in pj["lines"])
+    body += (f'<section class="base"><div class="wrap sec split" style="gap:56px"><div><p class="m eyebrow">{esc(L(u["project_info"], lang))}</p>'
+             f'<p class="lead" style="font-size:20px;max-width:none;color:var(--fg)">{esc(L(pj["info"], lang))}</p>'
+             f'<p class="m eyebrow" style="margin-top:40px">{esc(L(u["solutions_used"], lang))}</p><div class="chips" style="margin:0">{lines}</div></div>'
+             f'<div><p class="m eyebrow">{esc(L(u["our_scope"], lang))}</p><ol class="scope">{scope}</ol></div></div></section>')
+    order = [p["slug"] for p in CAT["projects"]]
+    nxt = PROJECTS[order[(order.index(pj["slug"]) + 1) % len(order)]]
+    body += (f'<section class="base bt"><div class="wrap" style="padding-block:56px"><a class="next" href="/{lang}/projects/{nxt["slug"]}/">'
+             f'<span class="m muted">{esc(L(u["next_project"], lang))} →</span><span class="d">{esc(L(nxt["title"], lang))}</span></a></div></section>')
+    return body + cta_band(t)
+
+
+def about_body(t, v):
+    lang, a = t["lang"], CAT["about"]
+    caps = "".join(f'<li><span class="m acc">{i + 1:02d}</span><span>{esc(L(x, lang))}</span></li>' for i, x in enumerate(a["caps"]))
+    vals = "".join(f'<div><div class="m acc">{i + 1:02d}</div><div class="d">{esc(L(n, lang))}</div><p>{esc(L(d, lang))}</p></div>' for i, (n, d) in enumerate(a["values"]))
+    tl = "".join(f'<li><div class="d{" now" if y == "2008" else ""}">{num(y)}</div><p>{esc(L(d, lang))}</p></li>' for y, d in a["history"])
+    stats = "".join(f'<div class="stat"><div class="d">{num(x)}</div><span class="m">{esc(y)}</span></div>' for x, y in t["stats"])
+    g = t["group"]
+    offices = "".join(f'<li><span style="font-weight:600">{esc(c)}</span><span class="m">{esc(co)}</span></li>' for c, co, *_ in g["items"])
+    return (phero(t, [(t["nav"]["about"], None)], L(a["eyebrow"], lang), L(a["title"], lang), L(a["intro"], lang))
+            + f'<section class="base bt bb" aria-label="{esc(t["stats_label"])}"><div class="wrap stats">{stats}</div></section>'
+            + f'<section class="base"><div class="wrap sec split" style="gap:56px"><ol class="scope">{caps}</ol><p class="lead" style="font-size:20px;color:var(--fg);max-width:none">{esc(L(a["people"], lang))}</p></div></section>'
+            + f'<section class="alt"><div class="wrap sec"><div class="cards3">'
+              f'<div class="card"><div class="m acc">{esc(L(a["vision_t"], lang))}</div><div class="s" style="font-size:19px;color:inherit">{esc(L(a["vision"], lang))}</div></div>'
+              f'<div class="card hl"><div class="m acc">{esc(L(a["mission_t"], lang))}</div><div class="s" style="font-size:19px;color:inherit">{esc(L(a["mission"], lang))}</div></div></div></div></section>'
+            + f'<section class="base"><div class="wrap sec"><p class="m eyebrow">{esc(L(a["values_t"], lang))}</p><h2 class="d h2" style="margin-bottom:52px">{esc(L(a["values_t"], lang))}</h2><div class="cols4 vals">{vals}</div></div></section>'
+            + f'<section class="base bt" style="background:var(--bg-2)"><div class="wrap sec"><p class="m eyebrow">{esc(t["lineage"]["eyebrow"].split("·")[-1].strip())}</p><h2 class="d h2" style="margin-bottom:52px">{esc(L(a["history_t"], lang))}</h2><ol class="timeline">{tl}</ol></div></section>'
+            + f'<section class="base bt"><div class="wrap sec split" style="align-items:center"><div><p class="m eyebrow">{esc(g["eyebrow"])}</p><h2 class="d h2" style="margin-bottom:24px">{esc(g["title"])}</h2><p class="lead">{esc(g["lead"])}</p>'
+              f'<a class="btn btn-o" style="margin-top:24px" href="/{lang}/contact/#companies">{esc(L(a["group_cta"], lang))}</a></div><ul class="offices">{offices}</ul></div></section>'
+            + cta_band(t))
+
+
+def services_body(t, v):
+    lang, sp = t["lang"], CAT["services_page"]
+    out = ""
+    for i, it in enumerate(sp["items"]):
+        paras = "".join(f"<p>{esc(L(p, lang))}</p>" for p in it["p"])
+        extra = f'<a class="btn btn-p" href="{tel(PHONE_MAINT)}">{esc(t["nav"]["maintenance"])} · {num(PHONE_MAINT)}</a>' if it["slug"] == "maintenance" else ""
+        out += (f'<section class="base bt svc" id="{it["slug"]}"><div class="wrap sec split" style="gap:56px"><div style="flex:1 1 340px"><div class="m acc">{esc(t["services"]["step"])} {i + 1}</div>'
+                f'<h2 class="d h2" style="font-size:clamp(34px,4.4vw,64px);margin-top:14px">{esc(L(it["t"], lang))}</h2></div><div class="svc-t" style="flex:2 1 520px">{paras}{extra}</div></div></section>')
+    return phero(t, [(t["nav"]["services"], None)], L(sp["eyebrow"], lang), L(sp["title"], lang), L(sp["lead"], lang)) + out + cta_band(t)
+
+
+def contact_body(t, v):
+    lang, c = t["lang"], CAT["contact_page"]
+    blocks = "".join(f'<div><span class="m acc">{esc(L(a, lang))}</span><a class="d" href="{tel(n)}">{num(n)}</a><span class="m muted">{esc(L(h, lang))}</span></div>' for a, n, h in c["lines"])
+    blocks += f'<div><span class="m acc">{esc(L(c["email_t"], lang))}</span><a class="d" href="mailto:info@ftc-qatar.com" dir="ltr">info@ftc-qatar.com</a></div>'
+    maps = "https://www.google.com/maps/search/?api=1&query=" + "FTC+Qatar+West+Industrial+Area+Doha"
+    f = lambda k: esc(L(c[k], lang))
+    form = (f'<form class="rfq" data-subject="{f("subject")}" action="mailto:info@ftc-qatar.com" method="post" enctype="text/plain">'
+            f'<label class="m">{f("f_name")}<input name="name" required autocomplete="name"></label>'
+            f'<label class="m">{f("f_company")}<input name="company" autocomplete="organization"></label>'
+            f'<label class="m">{f("f_phone")}<input name="phone" type="tel" autocomplete="tel" dir="ltr"></label>'
+            f'<label class="m">{f("f_email")}<input name="email" type="email" required autocomplete="email" dir="ltr"></label>'
+            f'<label class="m full">{f("f_msg")}<textarea name="message" rows="5" required></textarea></label>'
+            f'<button type="submit" class="btn btn-p full">{f("f_send")}</button></form>')
+    jobs = (f'<form class="rfq" data-subject="{f("jobs_subject")}" action="mailto:info@ftc-qatar.com" method="post" enctype="text/plain">'
+            f'<label class="m">{f("f_name")}<input name="name" required autocomplete="name"></label>'
+            f'<label class="m">{f("f_email")}<input name="email" type="email" required autocomplete="email" dir="ltr"></label>'
+            f'<label class="m full">{f("f_role")}<input name="position"></label>'
+            f'<label class="m full">{f("f_msg")}<textarea name="cover" rows="4"></textarea></label>'
+            f'<button type="submit" class="btn btn-o full">{f("f_apply")}</button></form>')
+    cos = "".join(
+        f'<li><div><span style="font-weight:600">{esc(n)}</span><span class="m muted">{esc(L(co, lang))}</span></div><p>{esc(L(ad, lang))}</p>'
+        + (f'<a class="m" href="{w}" rel="noopener">{f("website")} →</a>' if w else "") + '</li>' for n, co, ad, w in c["companies"])
+    return (phero(t, [(L(c["eyebrow"], lang), None)], L(c["eyebrow"], lang), L(c["title"], lang), "")
+            + f'<section class="base bt bb"><div class="wrap cblocks">{blocks}</div></section>'
+            + f'<section class="base"><div class="wrap sec split" style="gap:56px"><div><p class="m eyebrow">{f("visit_t")}</p><p class="lead" style="color:var(--fg)">{t["footer"]["address"]}</p>'
+              f'<a class="m link" href="{maps}" rel="noopener">{f("map")} →</a></div><div><h2 class="d" style="font-size:clamp(30px,3.6vw,52px);margin-bottom:28px">{f("form_t")}</h2>{form}</div></div></section>'
+            + f'<section class="base bt" id="companies" style="background:var(--bg-2)"><div class="wrap sec"><h2 class="d h2" style="margin-bottom:48px">{f("companies_t")}</h2><ul class="co">{cos}</ul></div></section>'
+            + f'<section class="base bt" id="jobs"><div class="wrap sec split" style="gap:56px"><div><h2 class="d" style="font-size:clamp(30px,3.6vw,52px)">{f("jobs_t")}</h2><p class="lead">{f("jobs_lead")}</p></div>{jobs}</div></section>')
 
 
 def build(site_urls):
@@ -331,8 +550,22 @@ def build(site_urls):
             shutil.copy(SRC / "data/land-dots.json", out / "assets/data/land-dots.json")
         urls = []
         for l, t in loc.items():
+            sfx = " | " + t["brand"]
             pages = {"": (t["meta"]["home_title"], t["meta"]["home_desc"], home_body(t, v)),
-                     "cold-rooms": (t["meta"]["cold_title"], t["meta"]["cold_desc"], cold_body(t, v))}
+                     "cold-rooms": (t["meta"]["cold_title"], t["meta"]["cold_desc"], cold_body(t, v)),
+                     "solutions": (t["nav"]["solutions"] + sfx, L(CAT["ui"]["solutions_lead"], l), solutions_body(t, v))}
+            for pl in CAT["pillars"]:
+                pages[pl["slug"]] = (L(pl["title"], l) + sfx, L(pl["lead"], l), pillar_body(t, v, pl))
+            for ln in CAT["lines"]:
+                if ln["slug"] != "cold-rooms":
+                    pages[ln["slug"]] = (L(ln["title"], l) + sfx, L(ln["lead"], l), line_body(t, v, ln))
+            pp = CAT["projects_page"]
+            pages["projects"] = (L(pp["meta"], l), L(pp["lead"], l), projects_body(t, v))
+            for pj in CAT["projects"]:
+                pages["projects/" + pj["slug"]] = (L(pj["title"], l) + sfx, L(pj["info"], l)[:155], project_body(t, v, pj))
+            pages["about"] = (L(CAT["about"]["meta"], l), L(CAT["about"]["intro"], l), about_body(t, v))
+            pages["services"] = (L(CAT["services_page"]["meta"], l), L(CAT["services_page"]["lead"], l), services_body(t, v))
+            pages["contact"] = (L(CAT["contact_page"]["meta"], l), t["footer"]["entity"] + " · " + PHONE_HEAD, contact_body(t, v))
             for slug, (title, desc, body) in pages.items():
                 d = out / l / slug if slug else out / l
                 d.mkdir(parents=True, exist_ok=True)

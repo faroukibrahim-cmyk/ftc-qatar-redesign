@@ -152,7 +152,7 @@ a.cell:hover { color: var(--fg); background: var(--bg-2); }
 .chip { border: 1px solid var(--rule-2); border-radius: 99px; padding: 10px 16px; }
 .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 28px 20px; }
 .proj { display: flex; flex-direction: column; gap: 12px; }
-.proj img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--r); }
+.proj img { width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--r); }
 .proj h3 { margin: 0; font-size: 22px; font-weight: 600; }
 .proj p { margin: 0; font-size: 14px; color: var(--mist); }
 .cols4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); border-top: 1px solid var(--rule-2); }
@@ -393,3 +393,67 @@ html[dir="rtl"] .marks .mq { animation-name: mq-rtl; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* Catalogue pages: page hero, product line cards, product plates, project pages, about, contact */
+.phero h1.d { font-size: clamp(44px, 7vw, 112px); line-height: .9; max-width: 16ch; }
+.lgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+.lcard { display: flex; flex-direction: column; border: 1px solid var(--rule); border-radius: var(--r-lg); overflow: hidden; color: var(--fg); background: var(--bg); transition: border-color .3s, transform .45s var(--ease), box-shadow .45s; }
+.lcard:hover { color: var(--fg); border-color: var(--acc); transform: translateY(-4px); box-shadow: 0 18px 40px -24px rgba(0,0,0,.45); }
+.lc-b { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 10px; }
+.lc-b .top { display: flex; justify-content: space-between; color: var(--acc); font-size: 10px; }
+.lc-b h3 { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.15; transition: color .3s; }
+.lcard:hover h3 { color: var(--acc); }
+.lc-b p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--fg-2); }
+/* Product photos are catalogue cut-outs on white, so they sit on a fixed light plate in every theme */
+.plate { background: #F2F5F7; aspect-ratio: 4/3; display: grid; place-items: center; overflow: hidden; }
+.plate img { width: 100%; height: 100%; object-fit: contain; padding: 8%; mix-blend-mode: multiply; transition: transform .6s var(--ease); }
+.plate.none span { color: #9AA8B2; font-size: 22px; letter-spacing: .3em; }
+.lcard:hover .plate img, .prod:hover .plate img { transform: scale(1.06); }
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: var(--r-lg); overflow: hidden; }
+.prod { background: var(--bg); display: flex; flex-direction: column; }
+.prod .pb { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.prod h3 { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.2; }
+.prod p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--fg-2); }
+.prod .go { margin-top: auto; padding-top: 8px; color: var(--acc); font-size: 11px; opacity: .7; transition: opacity .3s; }
+.prod:hover .go { opacity: 1; }
+a.proj { color: var(--fg); }
+a.proj:hover { color: var(--fg); }
+.proj .ph { overflow: hidden; border-radius: var(--r); }
+.proj .ph img { aspect-ratio: 4/3; object-fit: cover; transition: transform .8s var(--ease); }
+.pfilter .chip { background: none; color: var(--fg); font: inherit; cursor: pointer; }
+.pfilter .chip.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.pf[hidden] { display: none; }
+.gal { display: grid; gap: 12px; }
+.gal .ph { overflow: hidden; border-radius: var(--r-lg); }
+.gal img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gal.n1 img { aspect-ratio: 21/9; }
+.gal.n3 { grid-template-columns: 2fr 1fr; grid-auto-rows: minmax(0, 1fr); }
+.gal.n3 .ph:first-child { grid-row: span 2; }
+.gal.n3 .ph:first-child img { aspect-ratio: auto; min-height: 100%; }
+.gal.n3 .ph:not(:first-child) img { aspect-ratio: 16/10; }
+.gal.n3 .ph:nth-child(n+4) { display: none; }
+@media (max-width: 760px) { .gal.n3 { grid-template-columns: 1fr; } .gal.n3 .ph:first-child { grid-row: auto; } .gal.n1 img { aspect-ratio: 4/3; } }
+.scope { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-2); }
+.scope li { display: flex; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--rule); font-size: 17px; line-height: 1.45; transition: padding .35s var(--ease), color .3s; }
+.scope li .m { padding-top: 4px; font-size: 11px; }
+.scope li:hover { padding-inline-start: 8px; }
+.next { display: flex; flex-direction: column; gap: 10px; color: var(--fg); }
+.next .d { font-size: clamp(32px, 5vw, 72px); font-weight: 750; transition: color .3s; }
+.next:hover .d { color: var(--acc); }
+.vals .d { font-size: 24px; }
+.svc-t p { font-size: 18px; line-height: 1.65; color: var(--fg-2); margin: 0 0 18px; max-width: 64ch; }
+.svc-t .btn { margin-top: 12px; }
+.cblocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.cblocks > div { display: flex; flex-direction: column; gap: 10px; padding: 36px 28px 36px 0; padding-inline: 0 28px; }
+.cblocks .d { font-size: clamp(22px, 2.2vw, 30px); font-weight: 700; color: var(--fg); }
+.cblocks a.d:hover { color: var(--acc); }
+.rfq textarea { font: 16px var(--f-sans); background: var(--bg-2); color: var(--fg); border: 1px solid var(--rule-2); border-radius: var(--r); padding: 14px; text-transform: none; letter-spacing: 0; resize: vertical; }
+html[lang="ar"] .rfq textarea { font-family: var(--f-ar); }
+.rfq textarea:focus { outline: none; border-color: var(--acc); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 25%, transparent); }
+.co { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+.co li { background: var(--bg-2); padding: 28px; display: flex; flex-direction: column; gap: 12px; transition: background-color .3s; }
+.co li:hover { background: var(--bg); }
+.co li > div { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.co p { margin: 0; font-size: 14px; color: var(--fg-2); }
+.co a { color: var(--acc); font-size: 11px; margin-top: auto; }
+h2.d a { color: inherit; } h2.d a:hover { color: var(--acc); }

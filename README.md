@@ -7,6 +7,8 @@ The live site is ftc-qatar.com. This repo holds the audit, the v1 design, and tw
 | `research/` | Audit, full content inventory, reference sites, v2 3D plan, current brochure |
 | `design/canvas/` | v1 Claude Design canvas sources (artboards) |
 | `src/i18n/{en,ar}.json` | All site copy, one file per language |
+| `src/i18n/catalog.json` | Every solution, product line, product, project, About/Services/Contact page, as [English, Arabic] pairs. Items with `"written": true` had no copy on the live site and need FTC sign-off |
+| `src/img/p`, `src/img/ref` | Product and project photos from ftc-qatar.com, converted to WebP |
 | `src/css`, `src/js`, `src/img` | Shared styles (design tokens), scripts, FTC photos |
 | `src/js/v2/` | three.js facility cutaway, scroll film and group globe (v2 only) |
 | `tools/blender/facility.py` | The 3D facility: builds it headless, exports `src/models/facility.glb`, renders the film |
