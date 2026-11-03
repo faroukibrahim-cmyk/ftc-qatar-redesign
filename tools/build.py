@@ -516,7 +516,7 @@ def contact_body(t, v):
             f'<label class="m full">{f("f_msg")}<textarea name="cover" rows="4"></textarea></label>'
             f'<button type="submit" class="btn btn-o full">{f("f_apply")}</button></form>')
     cos = "".join(
-        f'<li><div><span style="font-weight:600">{esc(n)}</span><span class="m muted">{esc(L(co, lang))}</span></div><p>{esc(L(ad, lang))}</p>'
+        f'<li><div><span style="font-weight:600">{esc(n)}</span><span class="m muted">{esc(L(co, lang))}</span></div>' + (f'<p>{esc(L(ad, lang))}</p>' if ad else "")
         + (f'<a class="m" href="{w}" rel="noopener">{f("website")} →</a>' if w else "") + '</li>' for n, co, ad, w in c["companies"])
     return (phero(t, [(L(c["eyebrow"], lang), None)], L(c["eyebrow"], lang), L(c["title"], lang), "")
             + f'<section class="base bt bb"><div class="wrap cblocks">{blocks}</div></section>'

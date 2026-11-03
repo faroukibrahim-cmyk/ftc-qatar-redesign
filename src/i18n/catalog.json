@@ -356,14 +356,16 @@
   "companies_t": ["Our companies", "شركاتنا"],
   "companies": [
     ["FTC Qatar", ["Qatar", "قطر"], ["Building 16, Street 653, Zone 57, West Industrial Area, Doha", "مبنى 16، شارع 653، منطقة 57، المنطقة الصناعية الغربية، الدوحة"], "https://www.ftc-qatar.com/"],
-    ["BES", ["Qatar", "قطر"], ["Building 16, Street 653, Zone 57, West Industrial Area, Doha", "مبنى 16، شارع 653، منطقة 57، المنطقة الصناعية الغربية، الدوحة"], null],
+    ["BES", ["Qatar", "قطر"], ["Building 16, Street 653, Zone 57, West Industrial Area, Doha", "مبنى 16، شارع 653، منطقة 57، المنطقة الصناعية الغربية، الدوحة"], "https://bes-qatar.com/"],
     ["FTC ME", ["United Arab Emirates", "الإمارات العربية المتحدة"], ["Arenco, Building 4, 103, Dubai", "Arenco، مبنى 4، 103، دبي"], "https://ftc-me.com/"],
     ["FTC Arabia", ["Saudi Arabia", "السعودية"], ["Riyadh", "الرياض"], "https://ftc-arabia.com/"],
     ["FTC Lebanon", ["Lebanon", "لبنان"], ["Georges Fattal Street, Jisr El Wati, Sin el Fil", "شارع جورج فتال، جسر الواطي، سن الفيل"], "https://farjallah.com/leb"],
-    ["Iceberg (HQ)", ["Lebanon", "لبنان"], ["Regie Street, Hadath", "شارع الريجي، الحدث"], null],
-    ["Iceberg (truck box factory)", ["Lebanon", "لبنان"], ["Mahmoul Street, Hadath", "شارع المحمول، الحدث"], null],
+    ["Iceberg (HQ)", ["Lebanon", "لبنان"], ["Regie Street, Hadath", "شارع الريجي، الحدث"], "https://iceberg-lb.com/"],
+    ["Iceberg (truck box factory)", ["Lebanon", "لبنان"], ["Mahmoul Street, Hadath", "شارع المحمول، الحدث"], "https://iceberg-lb.com/"],
     ["FTC Europe", ["Greece", "اليونان"], ["Evrou 4, Galatsi 111 47", "Evrou 4، Galatsi 111 47"], "https://ftceurope.com/"],
-    ["Afrigel", ["Côte d'Ivoire", "ساحل العاج"], ["Rue des Brasseurs, Abidjan", "Rue des Brasseurs، أبيدجان"], "https://afrigel.com/"]
+    ["Afrigel", ["Côte d'Ivoire", "ساحل العاج"], ["Rue des Brasseurs, Abidjan", "Rue des Brasseurs، أبيدجان"], "https://afrigel.com/"],
+    ["Hygibreak", ["Hygiene panels", "ألواح صحية"], null, "https://hygibreak.com/"],
+    ["MME LB", ["Lebanon", "لبنان"], null, "https://mme-lb.com/"]
   ],
   "website": ["Website", "الموقع"]
 }
