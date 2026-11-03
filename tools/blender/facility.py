@@ -6,7 +6,7 @@
 Run from the project root:
   Blender -b -P tools/blender/facility.py -- --glb src/models/facility.glb
   Blender -b -P tools/blender/facility.py -- --preview /tmp/prev          # key frames, low samples
-  Blender -b -P tools/blender/facility.py -- --render /tmp/frames [--from 1 --to 270]
+  Blender -b -P tools/blender/facility.py -- --render /tmp/frames [--from 1 --to 270 --step 2 --w 1920 --h 1080]
   Blender -b -P tools/blender/facility.py -- --blend design/3d/ftc-facility.blend
 
 Units are metres, Blender Z-up. The glTF export turns that into three.js Y-up: (x, y, z) -> (x, z, -y).
@@ -349,4 +349,7 @@ if arg("--preview"):
     ee.taa_render_samples = 12
     render_frames([int(x) for x in arg("--frames", ",".join(str(p[0]) for p in PATH)).split(",")], arg("--preview"))
 if arg("--render"):
-    render_frames(range(int(arg("--from", 1)), int(arg("--to", 270)) + 1), arg("--render"))
+    # --step 2 renders every other frame (what the site scrubs) plus the five step posters
+    KEYS = (34, 106, 156, 212, 252)
+    fr = set(range(int(arg("--from", 1)), int(arg("--to", 270)) + 1, int(arg("--step", 1)))) | set(KEYS)
+    render_frames(sorted(fr), arg("--render"))

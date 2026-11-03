@@ -24,7 +24,7 @@ The **Design options** button on every page switches theme, accent, headline sty
 Regenerate the 3D (needs Blender 5.1+, `cwebp`, `ffmpeg`):
 
 ```bash
-/Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup -P tools/blender/facility.py -- --glb src/models/facility.glb --blend "$PWD/design/3d/ftc-facility.blend" --render /tmp/ftc-frames
+/Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup -P tools/blender/facility.py -- --glb src/models/facility.glb --blend "$PWD/design/3d/ftc-facility.blend" --render /tmp/ftc-frames --step 2 --w 1920 --h 1080 --samples 64
 tools/make_film.sh /tmp/ftc-frames 2
 python3 tools/build.py
 ```

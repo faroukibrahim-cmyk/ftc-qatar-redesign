@@ -105,7 +105,7 @@ def design_panel(t):
 </section>'''
 
 
-THEME_BOOT = """<script>(function(){var k=['theme','accent','type','shape'],d={theme:'ink',accent:'cyan',type:'expanded',shape:'soft'},q=new URLSearchParams(location.search),s={};try{s=JSON.parse(localStorage.getItem('ftc-design')||'{}')}catch(e){}k.forEach(function(n){document.documentElement.setAttribute('data-'+n,q.get(n)||s[n]||d[n])})})();</script>"""
+THEME_BOOT = """<script>(function(){var k=['theme','accent','type','shape'],d={theme:'ink',accent:'cyan',type:'expanded',shape:'soft'},q=new URLSearchParams(location.search),s={};try{s=JSON.parse(localStorage.getItem('ftc-design')||'{}')}catch(e){}k.forEach(function(n){document.documentElement.setAttribute('data-'+n,q.get(n)||s[n]||d[n])});var h=document.documentElement;if(!matchMedia('(prefers-reduced-motion: reduce)').matches){h.classList.add('mo');setTimeout(function(){if(!window.ftcMotion)h.classList.remove('mo')},3000)}})();</script>"""
 
 
 def page(t, v, slug, title, desc, body, site_url):
@@ -127,7 +127,7 @@ def page(t, v, slug, title, desc, body, site_url):
     links = [("solutions", home + "#solutions"), ("industries", home + "#industries"), ("projects", home + "#projects"),
              ("group", home + "#group"), ("services", home + "#services"), ("about", home + "#lineage")]
     nav_html = "".join(f'<a href="{h}"' + (' aria-current="page"' if (k == "solutions" and slug) else "") + f'>{esc(nav[k])}</a>' for k, h in links)
-    scripts = '<script src="/assets/js/site.js" defer></script>'
+    scripts = '<script src="/assets/js/site.js" defer></script><script src="/assets/js/motion.js" defer></script>'
     if v == "v2":
         scripts += ('<script type="importmap">{"imports":{"three":"/assets/vendor/three.module.min.js","three/addons/":"/assets/vendor/jsm/"}}</script>'
                     '<script type="module" src="/assets/js/film.js"></script>'
@@ -215,7 +215,7 @@ def home_body(t, v):
         for i, (a, b, c, d) in enumerate(p["items"]))
     chips = "".join(f'<span class="chip m">{esc(x)}</span>' for x in p["sectors"])
     projs = "".join(
-        f'<article class="proj"><img src="/assets/img/{img}" alt="{esc(title)}" loading="lazy" width="768" height="576"><div class="m acc">{esc(tag)}</div><h3>{esc(title)}</h3><p>{esc(pr["scope"])}</p></article>'
+        f'<article class="proj"><div class="ph"><img src="/assets/img/{img}" alt="{esc(title)}" loading="lazy" width="768" height="576"></div><div class="m acc">{esc(tag)}</div><h3>{esc(title)}</h3><p>{esc(pr["scope"])}</p></article>'
         for img, tag, title in pr["items"])
     svs = "".join(f'<div><div class="m acc">{esc(sv["step"])} {i + 1}</div><div class="d">{esc(a)}</div><p>{esc(b)}</p></div>' for i, (a, b) in enumerate(sv["items"]))
     offices = "".join(
@@ -285,7 +285,7 @@ def cold_body(t, v):
     head = "".join(f'<th scope="col" class="m">{esc(x)}</th>' for x in c["cols"])
     rows = "".join(f'<tr><th scope="row">{esc(a)}</th><td>{esc(b)}</td><td>{esc(cc)}</td><td class="m">{esc(d)}</td></tr>' for a, b, cc, d in c["rows"])
     proc = "".join(f'<li><div class="m acc">0{i + 1}</div><div style="font-size:19px;font-weight:700;margin:10px 0 8px">{esc(a)}</div><p>{esc(b)}</p></li>' for i, (a, b) in enumerate(c["process"]))
-    rel = "".join(f'<article class="proj"><img src="/assets/img/{img}" alt="{esc(tt)}" loading="lazy" style="aspect-ratio:16/10" width="768" height="480"><div class="m acc">{esc(tag)}</div><h3 style="font-size:20px">{esc(tt)}</h3></article>' for img, tag, tt in c["related"])
+    rel = "".join(f'<article class="proj"><div class="ph"><img src="/assets/img/{img}" alt="{esc(tt)}" loading="lazy" style="aspect-ratio:16/10" width="768" height="480"></div><div class="m acc">{esc(tag)}</div><h3 style="font-size:20px">{esc(tt)}</h3></article>' for img, tag, tt in c["related"])
     faq = "".join(f"<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in c["faq"])
     ds = "".join(f'<a class="chip m" href="/assets/ftc-qatar-brochure.pdf">{esc(x)}</a>' for x in c["datasheets"])
     return f'''
@@ -318,7 +318,7 @@ def build(site_urls):
         shutil.copytree(SRC / "img", out / "assets/img")
         if v == "v1": (out / "assets/img/hero-loop.mp4").unlink()
         (out / "assets/js").mkdir()
-        shutil.copy(SRC / "js/site.js", out / "assets/js/site.js")
+        for f in ["site.js", "motion.js"]: shutil.copy(SRC / "js" / f, out / "assets/js" / f)
         if (ROOT / "research/ftc-brochure-current.pdf").exists():
             shutil.copy(ROOT / "research/ftc-brochure-current.pdf", out / "assets/ftc-qatar-brochure.pdf")
         if v == "v2":

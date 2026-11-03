@@ -6,8 +6,10 @@ if (sec && !matchMedia('(prefers-reduced-motion: reduce)').matches) init();
 
 function init() {
   const N = +sec.dataset.frames, cuts = JSON.parse(sec.dataset.cuts);
-  const small = innerWidth < 760 || (navigator.connection && navigator.connection.saveData);
-  const src = i => `/assets/film/${small ? 'm' : 'd'}/f${String(i + 1).padStart(3, '0')}.webp`;
+  // Phones get a portrait centre crop; desktops get 1280 or, on big or high-DPI screens, 1920
+  const save = navigator.connection && navigator.connection.saveData;
+  const set = innerWidth < 760 || innerHeight > innerWidth ? 'm' : !save && innerWidth * Math.min(devicePixelRatio || 1, 2) > 1500 ? 'x' : 'd';
+  const src = i => `/assets/film/${set}/f${String(i + 1).padStart(3, '0')}.webp`;
   const canvas = sec.querySelector('canvas'), ctx = canvas.getContext('2d');
   const items = [...sec.querySelectorAll('.film-steps li')];
   const rail = sec.querySelector('.film-rail span');
@@ -41,10 +43,11 @@ function init() {
     if (!im) return;
     const cw = canvas.width, ch = canvas.height, s = Math.max(cw / im.width, ch / im.height);
     const w = im.width * s, h = im.height * s;
+    ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(im, (cw - w) / 2, (ch - h) / 2, w, h);
   }
   function resize() {
-    const r = Math.min(devicePixelRatio || 1, 1.5);
+    const r = Math.min(devicePixelRatio || 1, 2);
     canvas.width = canvas.clientWidth * r; canvas.height = canvas.clientHeight * r; dirty = true;
   }
   new ResizeObserver(resize).observe(canvas);
