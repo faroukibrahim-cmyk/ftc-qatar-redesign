@@ -23,6 +23,13 @@
   "filter_all": ["All", "الكل"],
   "contact": ["Contact", "تواصل معنا"],
   "brochure": ["Download the brochure", "حمّل الكتيّب"],
+  "brochure_title": ["Download our brochure", "حمّل كتيّبنا التعريفي"],
+  "brochure_lead": ["The full FTC Qatar scope, brands and references in one PDF.", "نطاق أعمال إف تي سي قطر وعلاماتها ومشاريعها في ملف PDF واحد."],
+  "download": ["Download", "تحميل"],
+  "scope_title": ["Scope of work", "نطاق الأعمال"],
+  "scope_lead": ["Seventeen product lines in five disciplines. Pick one to see the range.", "سبعة عشر خط منتجات في خمسة تخصصات. اختر أحدها لعرض التشكيلة."],
+  "history_more": ["Our full history", "تاريخنا الكامل"],
+  "services_more": ["More about our services", "المزيد عن خدماتنا"],
   "solutions_title": ["Solutions", "الحلول"],
   "solutions_lead": ["Five disciplines, eighteen product lines, one contractor responsible from design to maintenance.", "خمسة تخصصات وثمانية عشر خط منتجات ومقاول واحد مسؤول من التصميم حتى الصيانة."]
 },

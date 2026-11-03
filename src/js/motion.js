@@ -72,6 +72,14 @@
     label.classList.add('mq-label');
   }
 
+  // Partner logos: the same slow marquee (a second copy makes the loop seamless; pauses on hover)
+  var lr = document.querySelector('.logo-run');
+  if (lr) {
+    var cp = lr.cloneNode(true); cp.setAttribute('aria-hidden', 'true');
+    [].forEach.call(cp.querySelectorAll('img'), function (i) { i.alt = ''; });
+    lr.parentNode.appendChild(cp); lr.parentNode.classList.add('run');
+  }
+
   // Header: solid on scroll, steps aside going down, returns going up; a thin progress line underneath
   var hdr = document.querySelector('.hdr'), nav = document.getElementById('nav'), last = scrollY, ticking = false;
   function onScroll() {

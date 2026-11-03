@@ -9,6 +9,20 @@
   var saveData = navigator.connection && navigator.connection.saveData;
   if (vid && (matchMedia('(prefers-reduced-motion: reduce)').matches || saveData)) vid.remove();
 
+  // Section footage (brochure band): loads only when near the viewport, pauses off screen, never with reduced motion or data saver
+  [].forEach.call(document.querySelectorAll('[data-lazy-video]'), function (v) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || saveData || !('IntersectionObserver' in window)) { v.remove(); return; }
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) {
+          var s = v.querySelector('source[data-src]');
+          if (s) { s.src = s.getAttribute('data-src'); s.removeAttribute('data-src'); v.load(); }
+          v.play().catch(function () {});
+        } else v.pause();
+      });
+    }, { rootMargin: '200px 0px' }).observe(v);
+  });
+
   // Mobile menu
   var menuBtn = document.querySelector('.menu-btn'), nav = document.getElementById('nav');
   if (menuBtn && nav) {

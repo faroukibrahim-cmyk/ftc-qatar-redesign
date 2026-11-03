@@ -457,3 +457,43 @@ html[lang="ar"] .rfq textarea { font-family: var(--f-ar); }
 .co p { margin: 0; font-size: 14px; color: var(--fg-2); }
 .co a { color: var(--acc); font-size: 11px; margin-top: auto; }
 h2.d a { color: inherit; } h2.d a:hover { color: var(--acc); }
+
+/* Scope of work (original site's icon grid) */
+.scope-grid { display: grid; gap: 40px; }
+.sc-g { display: grid; grid-template-columns: minmax(200px, 1fr) 3fr; gap: 24px; padding-top: 28px; border-top: 1px solid var(--rule-2); }
+.sc-h { display: flex; flex-direction: column; gap: 10px; color: var(--fg); font-size: 22px; font-weight: 700; line-height: 1.15; }
+.sc-h:hover { color: var(--acc); }
+.sc-h .m { font-size: 11px; }
+.sc-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.sc-t { background: var(--bg); color: var(--fg); border: 1px solid var(--rule); border-radius: var(--r); padding: 26px 20px 22px; display: flex; flex-direction: column; gap: 18px; min-height: 160px; transition: background-color .3s; }
+.sc-t span { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.sc-t .ico { width: 52px; height: 52px; color: var(--acc); transition: transform .5s var(--ease); }
+.sc-t:hover { background: var(--bg-2); color: var(--fg); border-color: var(--acc); }
+.sc-t:hover .ico { transform: translateY(-4px) scale(1.06); }
+@media (max-width: 900px) { .sc-g { grid-template-columns: 1fr; } .sc-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Timeline with all ten milestones: five per row */
+.timeline.tl10 { grid-template-columns: repeat(5, minmax(0, 1fr)); row-gap: 40px; }
+@media (max-width: 1000px) { .timeline.tl10 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); } }
+
+/* Partner logos: colour logos on white tiles; a marquee with motion, a wrapped wall without */
+.logos { overflow: hidden; padding-inline: var(--gutter); }
+.logo-run { list-style: none; margin: 0 auto; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; max-width: 1320px; }
+.logo-run li { flex: 0 0 auto; width: 168px; height: 104px; background: #fff; border-radius: var(--r); display: grid; place-items: center; padding: 14px 20px; }
+.logo-run img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; filter: grayscale(1); opacity: .72; transition: filter .35s, opacity .35s; }
+.logo-run li:hover img { filter: none; opacity: 1; }
+.mo .logos.run { display: flex; gap: 12px; padding-inline: 0; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.mo .logos.run .logo-run { flex-wrap: nowrap; max-width: none; margin: 0; animation: lg 60s linear infinite; }
+html[dir="rtl"].mo .logos.run .logo-run { animation-name: lg-rtl; }
+@keyframes lg { to { transform: translateX(calc(-100% - 12px)); } }
+@keyframes lg-rtl { to { transform: translateX(calc(100% + 12px)); } }
+.mo .logos.run:hover .logo-run { animation-play-state: paused; }
+
+/* Brochure band over FTC's own counter footage */
+.broch { position: relative; overflow: hidden; color: #EAF2F7; }
+.broch .bgimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.broch::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,10,15,.88), rgba(6,10,15,.55)); }
+html[dir="rtl"] .broch::after { background: linear-gradient(270deg, rgba(6,10,15,.88), rgba(6,10,15,.55)); }
+.broch .wrap { position: relative; z-index: 1; padding-block: clamp(80px, 11vw, 140px); display: flex; flex-wrap: wrap; align-items: center; gap: 20px 48px; }
+.broch h2 { font-size: clamp(36px, 5vw, 72px); margin: 0; flex: 1 1 100%; max-width: 14ch; }
+.broch .lead { margin: 0; color: #C9D6DF; flex: 1 1 360px; }

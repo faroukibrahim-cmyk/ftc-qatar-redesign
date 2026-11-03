@@ -36,7 +36,7 @@
     "temps": [["Chilled water", "+6…+12 °C"], ["Cold rooms", "0…+5 °C"], ["Freezers", "−18…−25 °C"], ["Blast & ammonia", "to −40 °C"]]
   },
   "stats_label": "FTC in numbers",
-  "stats": [["1946", "Farjallah group founded"], ["5K+", "Projects completed"], ["20+", "Group companies"], ["7", "Countries"], ["500+", "Engineers & technicians"]],
+  "stats": [["1946", "Farjallah group founded"], ["5K+", "Projects completed"], ["10K+", "Clients"], ["20+", "Group companies"], ["7", "Countries"], ["500+", "Employees"]],
   "landmarks": {
     "label": "Inside Qatar’s landmarks",
     "items": ["Al Bayt Stadium", "Hamad Medical City", "Doha Metro Red Line", "Sidra Hospital", "Mall of Qatar", "Khalifa Stadium", "Al Udeid Air Base", "IKEA Qatar", "GWC Ras Laffan"]
