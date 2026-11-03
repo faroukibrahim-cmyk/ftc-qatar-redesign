@@ -10,6 +10,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC, DIST = ROOT / "src", ROOT / "dist"
 LANGS = ["en", "ar"]
+# v2 fly-through: rendered frames live in src/film/{d,m}/fNNN.webp (tools/make_film.sh); k0..k4.jpg are the step posters.
+FILM_FRAMES = len(list((SRC / "film/d").glob("f*.webp"))) if (SRC / "film/d").exists() else 0
+FILM_CUTS = [0, 0.227, 0.487, 0.673, 0.859]  # where each journey step starts, as a share of the film (facility.py STEPS)
 BRANDS = ["Kingspan", "Daikin", "Danfoss", "Promat", "STILL", "Sodeca", "Friga-Bohn", "Polidoor", "Boxcold",
           "Thermobreak", "Halcor", "Genebre", "Dantherm", "Mercor", "Stow", "Dinak", "Pyrotek"]
 PHONE_HEAD, PHONE_MAINT, PHONE_WH = "+974 4144 1800", "+974 3370 8096", "+974 3122 5566"
@@ -126,7 +129,8 @@ def page(t, v, slug, title, desc, body, site_url):
     nav_html = "".join(f'<a href="{h}"' + (' aria-current="page"' if (k == "solutions" and slug) else "") + f'>{esc(nav[k])}</a>' for k, h in links)
     scripts = '<script src="/assets/js/site.js" defer></script>'
     if v == "v2":
-        scripts += ('<script type="importmap">{"imports":{"three":"/assets/vendor/three.module.min.js"}}</script>'
+        scripts += ('<script type="importmap">{"imports":{"three":"/assets/vendor/three.module.min.js","three/addons/":"/assets/vendor/jsm/"}}</script>'
+                    '<script type="module" src="/assets/js/film.js"></script>'
                     '<script type="module" src="/assets/js/cutaway.js"></script><script type="module" src="/assets/js/globe.js"></script>')
     f = t["footer"]
     return f'''<!doctype html>
@@ -220,6 +224,18 @@ def home_body(t, v):
     gfig = (f'<figure style="margin:0"><div class="globe" id="globe"><div class="poster">{globe_svg(t)}</div><div class="pin-card" hidden></div></div>'
             f'<figcaption class="m muted" style="margin-top:12px">{esc(g["fig_v2"])}</figcaption></figure>') if v == "v2" else \
            f'<figure style="margin:0"><div style="max-width:520px">{globe_svg(t)}</div><figcaption class="m muted" style="margin-top:12px">{esc(g["fig_v1"])}</figcaption></figure>'
+    film = ""
+    if v == "v2":
+        fm = t["film"]
+        fsteps = "".join(
+            f'<li><img src="/assets/film/k{i}.jpg" alt="" loading="lazy" width="1280" height="720"><span class="num m">0{i + 1}</span>'
+            f'<span class="t">{esc(a)}</span><span class="s">{esc(b)}</span></li>' for i, (a, b) in enumerate(j["steps"]))
+        film = (f'<section class="film" id="film" aria-labelledby="film-h" data-frames="{FILM_FRAMES}" data-cuts="{ja(FILM_CUTS)}">'
+                f'<div class="film-pin"><canvas class="film-canvas" aria-hidden="true"></canvas><div class="wrap film-ui">'
+                f'<div><p class="m eyebrow">{esc(fm["eyebrow"])}</p><h2 class="d h2" id="film-h" style="max-width:16ch">{esc(fm["title"])}</h2>'
+                f'<p class="m film-hint muted">{esc(fm["hint"])} ↓</p></div>'
+                f'<div style="position:relative"><ol class="film-steps">{fsteps}</ol><p class="m film-note">{esc(fm["note"])}</p>'
+                f'<div class="film-rail" aria-hidden="true"><span></span></div></div></div></div></section>')
     tl = "".join(f'<li><div class="d{" now" if a == "2008" else ""}">{num(a)}</div><p>{esc(b)}</p></li>' for a, b in ln["items"])
     brands = "".join(f"<span>{b}</span>" for b in BRANDS)
     opts = lambda xs: "".join(f"<option>{esc(x)}</option>" for x in xs)
@@ -233,6 +249,7 @@ def home_body(t, v):
 <div class="temps m">{temps}</div></div></section>
 <section class="base bt bb" aria-label="{esc(t["stats_label"])}"><div class="wrap stats">{stats}</div></section>
 <section class="base" aria-label="{esc(t["landmarks"]["label"])}"><div class="wrap marks m"><span class="acc">{esc(t["landmarks"]["label"])} →</span>{marks}</div></section>
+{film}
 <section class="alt-soft base bt" id="journey" style="background:var(--bg-2)"><div class="wrap sec split">
 <div><p class="m eyebrow">{esc(j["eyebrow"])}</p><h2 class="d h2">{esc(j["title"])}</h2><p class="lead" style="margin:24px 0 0">{esc(j["lead"])}</p><ol class="steps" id="steps">{steps}</ol></div>
 {fig}</div></section>
@@ -305,8 +322,10 @@ def build(site_urls):
         if (ROOT / "research/ftc-brochure-current.pdf").exists():
             shutil.copy(ROOT / "research/ftc-brochure-current.pdf", out / "assets/ftc-qatar-brochure.pdf")
         if v == "v2":
-            for f in ["cutaway.js", "globe.js"]: shutil.copy(SRC / "js/v2" / f, out / "assets/js" / f)
-            (out / "assets/vendor").mkdir()
+            for f in ["cutaway.js", "globe.js", "film.js"]: shutil.copy(SRC / "js/v2" / f, out / "assets/js" / f)
+            shutil.copytree(SRC / "vendor/jsm", out / "assets/vendor/jsm")
+            shutil.copytree(SRC / "models", out / "assets/models")
+            if (SRC / "film").exists(): shutil.copytree(SRC / "film", out / "assets/film")
             shutil.copy(SRC / "vendor/three.module.min.js", out / "assets/vendor/three.module.min.js")
             (out / "assets/data").mkdir()
             shutil.copy(SRC / "data/land-dots.json", out / "assets/data/land-dots.json")

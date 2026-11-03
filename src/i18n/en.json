@@ -245,5 +245,6 @@
     ],
     "cta_title": "Size your cold room.",
     "cta": "Start a request"
-  }
+  },
+  "film": {"eyebrow": "Fly-through", "title": "Walk through a facility we build.", "hint": "Scroll to move through the building", "note": "Illustrative 3D model, not a specific project"}
 }

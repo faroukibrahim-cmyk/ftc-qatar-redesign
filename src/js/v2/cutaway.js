@@ -1,17 +1,21 @@
-// v2 — explorable facility cutaway. Procedural stand-in for the Blender GLB kit (see research/03-v2-3d-plan.md).
+// v2 — explorable facility cutaway. The model is the Blender kit (tools/blender/facility.py -> facility.glb):
+// geometry only, one mesh per (part, role). Colours come from the design tokens, so the theme panel recolours it.
 // Scroll or click a journey step to move the camera; click a part for its card; drag (mouse) to orbit.
-// Falls back to the SVG poster when WebGL is missing or the context is lost.
+// Falls back to the SVG poster when WebGL is missing, the model fails to load, or the context is lost.
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const stage = document.getElementById('cutaway');
 const steps = [...document.querySelectorAll('#steps .step')];
-if (stage && hasWebGL()) init();
+if (stage && hasWebGL()) new GLTFLoader().load('/assets/models/facility.glb', g => init(g.scene), undefined, () => {});
 
 function hasWebGL() {
   try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; }
 }
+// Blender is Z-up; the GLB is Y-up. Shots are written in Blender metres so they match facility.py.
+const b = (x, y, z) => new THREE.Vector3(x, z, -y);
 
-function init() {
+function init(model) {
   const PARTS = JSON.parse(stage.dataset.parts);
   const card = stage.querySelector('.part-card');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -21,92 +25,74 @@ function init() {
   renderer.domElement.setAttribute('aria-hidden', 'true');
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(30, 1.2, 0.5, 200);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x223344, 1.6));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(12, 20, 14); scene.add(sun);
+  const camera = new THREE.PerspectiveCamera(30, 1.2, 1, 400);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x334455, 1.7));
+  const sun = new THREE.DirectionalLight(0xffffff, 1.5); sun.position.set(30, 50, 25); scene.add(sun);
+  scene.add(model);
 
-  const palette = {};
-  const mats = [];   // { mat, role } so a theme change can recolour everything
-  const edges = [];  // { line, part }
-  const groups = {}; // part key -> Group
+  const meshes = [];
+  model.traverse(o => {
+    if (!o.isMesh) return;
+    const role = o.userData.role || 'body';
+    o.material = new THREE.MeshStandardMaterial({ flatShading: true, roughness: 0.85, metalness: 0.05 });
+    const line = new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry, 25), new THREE.LineBasicMaterial({ transparent: true }));
+    o.add(line);
+    meshes.push({ o, role, part: o.userData.part || null, line });
+  });
 
-  function mat(role, opacity = 1) {
-    const m = new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.05, transparent: opacity < 1, opacity });
-    mats.push({ mat: m, role }); return m;
-  }
-  function box(part, w, h, d, x, y, z, role = 'body', opacity = 1) {
-    const g = new THREE.BoxGeometry(w, h, d);
-    const mesh = new THREE.Mesh(g, mat(role, opacity));
-    mesh.position.set(x, y + h / 2, z);
-    const line = new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ transparent: true }));
-    mesh.add(line); edges.push({ line, part });
-    mesh.userData.part = part;
-    (groups[part] ||= new THREE.Group()).add(mesh);
-    return mesh;
-  }
-
-  // Shell: slab and two back walls (front walls cut away)
-  box(null, 20, 0.3, 12, 0, -0.3, 0, 'floor');
-  box(null, 20, 5, 0.25, 0, 0, -6, 'wall', 0.55);
-  box(null, 0.25, 5, 12, -10, 0, 0, 'wall', 0.4);
-  // Cold room and freezer
-  box('cold', 6, 3, 5, -6, 0, -2.5, 'cold', 0.9);
-  box('freezer', 5, 3, 5, 0.5, 0, -2.5, 'freezer', 0.9);
-  // Dock: frame, door, leveller
-  box('dock', 0.4, 4, 0.4, 10, 0, -2.2); box('dock', 0.4, 4, 0.4, 10, 0, 1.2);
-  box('dock', 0.4, 0.4, 3.8, 10, 3.6, -0.5); box('dock', 0.15, 3.4, 3.2, 10, 0.2, -0.5, 'door', 0.7);
-  box('dock', 2.4, 0.15, 3, 8.6, 0, -0.5, 'accent');
-  // Plant skid: compressor rack and two condensers
-  box('plant', 3.2, 1.6, 1.4, 7, 0, -4.6);
-  box('plant', 1.6, 1.4, 1.6, 5.2, 0, -4.4, 'body'); box('plant', 1.6, 1.4, 1.6, 5.2, 1.4, -4.4, 'body');
-  // AHU and duct run on the back wall
-  box('ahu', 5, 1.4, 1.4, -5, 4.2, -5.2); box('ahu', 9, 0.6, 0.6, 2, 4.6, -5.2, 'duct');
-  // Racking rows with pallets
-  for (let r = 0; r < 3; r++) {
-    const z = 2.2 + r * 1.5;
-    box('racks', 12, 0.08, 0.9, -3, 1.4, z); box('racks', 12, 0.08, 0.9, -3, 2.8, z);
-    for (let x = -8.5; x <= 2.5; x += 1.4) { box('racks', 0.08, 3.6, 0.9, x, 0, z); box('racks', 1, 0.9, 0.8, x + 0.7, 1.48, z, 'pallet'); }
-  }
-  // Service van outside the dock
-  box('van', 4.2, 2.4, 2, 14, 0.3, 4, 'body'); box('van', 1.4, 1.6, 2, 16.8, 0.3, 4, 'body');
-  Object.values(groups).forEach(g => scene.add(g));
-
-  // Each shot frames its parts with the rest of the building still in view
+  // Each shot frames its parts with the rest of the building still in view: [camera, look-at] in Blender metres
   const SHOTS = [
-    { parts: ['dock'], pos: [30, 14, 18], at: [7, 1.2, -0.5] },
-    { parts: ['cold', 'freezer'], pos: [10, 18, 26], at: [-3, 1.2, -2] },
-    { parts: ['plant'], pos: [26, 15, 14], at: [5, 1.4, -3.5] },
-    { parts: ['ahu', 'racks'], pos: [14, 22, 30], at: [-1.5, 2.2, 0] },
-    { parts: ['van'], pos: [32, 13, 26], at: [10, 1.2, 2] },
+    { parts: ['dock'], pos: b(46, -26, 13), at: b(18, -3.5, 0.5) },
+    { parts: ['cold', 'freezer'], pos: b(-6, -28, 22), at: b(-5, 5, 1) },
+    { parts: ['plant'], pos: b(32, -20, 13), at: b(12.5, 7.5, 2) },
+    { parts: ['ahu', 'racks'], pos: b(4, -40, 22), at: b(-3, 0, 4) },
+    { parts: ['van'], pos: b(50, -42, 12), at: b(27, -15, -1) },
   ];
-  const OVERVIEW = { parts: [], pos: [28, 22, 32], at: [2, 0.5, 0] };
-  let shot = OVERVIEW, active = new Set();
-  const camPos = new THREE.Vector3(...OVERVIEW.pos), camAt = new THREE.Vector3(...OVERVIEW.at);
+  const OVERVIEW = { parts: [], pos: b(52, -56, 40), at: b(8, -3, 0) };
+  let active = new Set();
+  const camPos = OVERVIEW.pos.clone(), camAt = OVERVIEW.at.clone();
   const goalPos = camPos.clone(), goalAt = camAt.clone();
   let yaw = 0;
 
+  const P = {};
   function readPalette() {
     const cs = getComputedStyle(stage);
     const c = v => new THREE.Color(cs.getPropertyValue(v).trim() || '#888');
-    Object.assign(palette, { acc: c('--acc'), fg: c('--fg'), bg2: c('--bg-2'), rule: c('--rule-2'), mist: c('--mist') });
+    Object.assign(P, { acc: c('--acc'), fg: c('--fg'), bg2: c('--bg-2'), rule: c('--rule-2'), mist: c('--mist') });
+  }
+  const mix = (a, c, t) => a.clone().lerp(c, t);
+  function roleColour(role) {
+    switch (role) {
+      case 'floor': case 'panelfloor': return [P.bg2];
+      case 'yard': case 'slab': return [mix(P.bg2, P.rule, 0.35)];
+      case 'clad': return [mix(P.bg2, P.rule, 0.3), 0.35];   // see-through walls and roof keep the inside readable
+      case 'roof': return [P.rule, 0.25];
+      case 'block': return [mix(P.bg2, P.rule, 0.5)];
+      case 'panel': case 'door': return [mix(P.bg2, P.fg, 0.12)];
+      case 'unit': case 'duct': case 'tank': case 'plate': case 'body': case 'fabric': return [mix(P.bg2, P.mist, 0.45)];
+      case 'pallet': case 'stock': return [mix(P.bg2, P.mist, 0.7)];
+      case 'stock2': return [mix(P.bg2, P.fg, 0.22)];
+      case 'beam': return [mix(P.rule, P.mist, 0.4)];
+      case 'accent': case 'logo': return [P.acc];
+      case 'curtain': return [P.acc, 0.2];
+      default: return [P.rule];
+    }
   }
   function paint() {
-    const ROLE = { floor: palette.bg2, wall: palette.bg2, body: palette.rule, door: palette.mist, duct: palette.mist, pallet: palette.mist, cold: palette.acc, freezer: palette.fg, accent: palette.acc };
-    for (const { mat: m, role } of mats) { m.color.copy(ROLE[role] || palette.rule); m.emissive.setRGB(0, 0, 0); }
-    for (const { line, part } of edges) {
-      const on = active.has(part);
-      line.material.color.copy(on ? palette.acc : palette.rule);
-      line.material.opacity = on || !active.size ? 1 : 0.35;
+    for (const { o, role, part, line } of meshes) {
+      const [col, base = 1] = roleColour(role), on = active.has(part);
+      const op = active.size && part && !on ? Math.min(base, 0.22) : base;   // ghost the parts not in focus
+      o.material.color.copy(col); o.material.transparent = op < 1; o.material.opacity = op; o.material.depthWrite = op === 1;
+      o.material.emissive.copy(on ? P.acc : new THREE.Color(0)).multiplyScalar(on ? 0.16 : 0);
+      line.material.color.copy(on ? P.acc : P.rule);
+      line.material.opacity = on ? 1 : active.size ? 0.25 : 0.55;
     }
-    for (const [k, g] of Object.entries(groups)) g.children.forEach(mesh => {
-      if (active.has(k)) mesh.material.emissive.copy(palette.acc).multiplyScalar(0.25);
-    });
     dirty = true;
   }
   function setShot(i) {
-    shot = i == null ? OVERVIEW : SHOTS[i];
+    const shot = i == null ? OVERVIEW : SHOTS[i];
     active = new Set(shot.parts);
-    goalPos.set(...shot.pos); goalAt.set(...shot.at); yaw = 0;
+    goalPos.copy(shot.pos); goalAt.copy(shot.at); yaw = 0;
     if (reduce) { camPos.copy(goalPos); camAt.copy(goalAt); }
     steps.forEach((s, j) => j === i ? s.setAttribute('aria-current', 'step') : s.removeAttribute('aria-current'));
     paint();
@@ -118,10 +104,11 @@ function init() {
 
   // Picking and orbit
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+  const pickable = meshes.filter(m => m.part && PARTS[m.part]).map(m => m.o);
   let drag = null;
   const el = renderer.domElement;
   el.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') drag = { x: e.clientX, moved: false }; });
-  addEventListener('pointerup', () => { drag = null; });
+  addEventListener('pointerup', () => { setTimeout(() => { drag = null; }); });
   el.addEventListener('pointermove', e => {
     if (!drag) return;
     const dx = e.clientX - drag.x; drag.x = e.clientX;
@@ -133,23 +120,22 @@ function init() {
     const r = el.getBoundingClientRect();
     ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     ray.setFromCamera(ptr, camera);
-    const hit = ray.intersectObjects(Object.entries(groups).filter(([k]) => k !== 'null').map(([, g]) => g), true)
-      .find(h => h.object.userData.part);
+    const hit = ray.intersectObjects(pickable, false)[0];
     if (!hit) { card.hidden = true; return; }
     const key = hit.object.userData.part, info = PARTS[key];
     active = new Set([key]); paint();
     card.innerHTML = '';
-    const b = document.createElement('strong'); b.textContent = info.t;
-    card.append(b, document.createTextNode(info.s)); card.hidden = false;
+    const t = document.createElement('strong'); t.textContent = info.t;
+    card.append(t, document.createTextNode(info.s)); card.hidden = false;
   });
 
   // Size, visibility, context loss
+  let visible = false, dirty = true, raf = 0;
   function resize() {
     const { width, height } = stage.getBoundingClientRect();
     renderer.setSize(width, height, false); camera.aspect = width / height; camera.updateProjectionMatrix(); dirty = true;
   }
   new ResizeObserver(resize).observe(stage);
-  let visible = false, dirty = true, raf = 0;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(loop); }).observe(stage);
   el.addEventListener('webglcontextlost', e => {
     e.preventDefault(); stage.classList.remove('live'); el.remove();
@@ -165,8 +151,7 @@ function init() {
     camPos.lerp(goalPos, k); camAt.lerp(goalAt, k);
     tmp.copy(camPos).sub(camAt).applyAxisAngle(THREE.Object3D.DEFAULT_UP, yaw).add(camAt);
     camera.position.copy(tmp); camera.lookAt(camAt);
-    const moving = camPos.distanceToSquared(goalPos) > 1e-4;
-    if (moving || dirty) { renderer.render(scene, camera); dirty = false; }
+    if (camPos.distanceToSquared(goalPos) > 1e-4 || dirty) { renderer.render(scene, camera); dirty = false; }
     raf = requestAnimationFrame(loop);
   }
 

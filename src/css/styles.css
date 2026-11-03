@@ -257,3 +257,29 @@ html[dir="rtl"] .v2 .step[aria-current="step"] { box-shadow: inset -3px 0 0 var(
 .globe.live svg { visibility: hidden; }
 .pin-card { position: absolute; pointer-events: none; background: var(--bg-2); border: 1px solid var(--acc); border-radius: var(--r); padding: 10px 12px; font-size: 13px; transform: translate(-50%, calc(-100% - 14px)); white-space: nowrap; }
 .pin-card[hidden] { display: none; }
+
+/* v2 fly-through film: static key frames by default, a pinned scrubbed canvas once film.js takes over */
+.film { position: relative; background: #060A0F; color: #EAF2F7; --mist: #9FB0BD; }
+.film-pin { padding-block: 96px; }
+.film-canvas, .film-rail { display: none; }
+.film-steps { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px 16px; }
+.film-steps img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--r); display: block; margin-bottom: 14px; }
+.film-steps .num { color: var(--acc); display: block; margin-bottom: 6px; }
+.film-steps .t { display: block; font-size: 20px; font-weight: 600; }
+.film-steps .s { display: block; color: var(--mist); font-size: 15px; margin-top: 6px; }
+.film-note { color: var(--mist); margin: 20px 0 0; }
+.film.scrub { height: 520vh; }
+.film.scrub .film-pin { position: sticky; top: 0; height: 100vh; height: 100svh; padding: 0; overflow: hidden; }
+.film.scrub .film-canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+.film.scrub .film-pin::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to bottom, rgb(6 10 15 / .7), rgb(6 10 15 / 0) 32%, rgb(6 10 15 / 0) 52%, rgb(6 10 15 / .82)); }
+.film.scrub .film-ui { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding-block: 104px 40px; }
+.film.scrub .film-steps { display: block; position: relative; min-height: 9em; margin: 0; }
+.film.scrub .film-steps li { position: absolute; inset-inline-start: 0; bottom: 0; max-width: 480px; opacity: 0; transform: translateY(14px); transition: opacity .45s, transform .45s; }
+.film.scrub .film-steps li.on { opacity: 1; transform: none; }
+.film.scrub .film-steps img { display: none; }
+.film.scrub .film-steps .t { font-size: clamp(24px, 3vw, 36px); }
+.film.scrub .film-rail { display: block; height: 2px; background: rgb(234 242 247 / .2); margin-top: 24px; }
+.film-rail span { display: block; height: 100%; inline-size: 0; background: var(--acc); }
+.film.scrub .film-note { position: absolute; inset-inline-end: 0; bottom: 0; margin: 0; }
+@media (max-width: 760px) { .film.scrub .film-note { position: static; margin-top: 12px; } .film.scrub { height: 440vh; } }
