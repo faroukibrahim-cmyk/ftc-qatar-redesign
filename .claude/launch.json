@@ -1,0 +1,7 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {"name": "ftc-v1", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8101", "--directory", "dist/v1"], "port": 8101},
+    {"name": "ftc-v2", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8102", "--directory", "dist/v2"], "port": 8102}
+  ]
+}

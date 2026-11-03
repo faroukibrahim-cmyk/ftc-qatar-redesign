@@ -1,0 +1,249 @@
+{
+  "lang": "en",
+  "dir": "ltr",
+  "og_locale": "en_QA",
+  "brand": "FTC Qatar",
+  "meta": {
+    "home_title": "FTC Qatar | Refrigeration, Cold Rooms & HVAC Contractor in Doha",
+    "home_desc": "FTC Qatar designs, supplies, installs and maintains refrigeration, cold rooms, HVAC, insulation and warehousing systems across Qatar. Part of Farjallah Holding since 1946.",
+    "cold_title": "Modular Cold Rooms & Freezers in Qatar | FTC Qatar",
+    "cold_desc": "Walk-in chillers and freezers built with Kingspan panels, Polidoor doors and Iceberg refrigeration. Designed, installed and maintained 24/7 by FTC Qatar in Doha."
+  },
+  "nav": {
+    "skip": "Skip to content",
+    "solutions": "Solutions",
+    "industries": "Industries",
+    "projects": "Projects",
+    "group": "Group",
+    "services": "Services",
+    "about": "About",
+    "maintenance": "24/7 Maintenance",
+    "quote": "Request a quote",
+    "switch": "عربي",
+    "switch_label": "Arabic version",
+    "menu": "Menu",
+    "close": "Close",
+    "home": "Home",
+    "refrigeration": "Refrigeration",
+    "cold_rooms": "Cold rooms"
+  },
+  "hero": {
+    "eyebrow": "01 · Doha, Qatar · Since 2008 · Group since 1946",
+    "title": "We engineer the cold.",
+    "lead": "Refrigeration, HVAC, building envelope and warehousing for Qatar’s food, health, logistics and landmark projects. Designed, supplied, installed and kept running by one team.",
+    "cta1": "Plan a cold room",
+    "cta2": "See how it works",
+    "temps": [["Chilled water", "+6…+12 °C"], ["Cold rooms", "0…+5 °C"], ["Freezers", "−18…−25 °C"], ["Blast & ammonia", "to −40 °C"]]
+  },
+  "stats_label": "FTC in numbers",
+  "stats": [["1946", "Farjallah group founded"], ["5K+", "Projects completed"], ["20+", "Group companies"], ["7", "Countries"], ["500+", "Engineers & technicians"]],
+  "landmarks": {
+    "label": "Inside Qatar’s landmarks",
+    "items": ["Al Bayt Stadium", "Hamad Medical City", "Doha Metro Red Line", "Sidra Hospital", "Mall of Qatar", "Khalifa Stadium", "Al Udeid Air Base", "IKEA Qatar", "GWC Ras Laffan"]
+  },
+  "journey": {
+    "eyebrow": "02 · How a cold facility works",
+    "title": "From the dock to the plant room.",
+    "lead": "Every temperature-controlled building is a chain. We engineer every link, so the cold you pay for stays where your product is.",
+    "steps": [
+      ["At the dock", "Dock levellers, shelters, rapid and sectional doors that seal the cold in."],
+      ["In the cold room", "Insulated panels, cold-storage doors, evaporators and hygienic finishes."],
+      ["In the plant room", "Central power racks, condensers, ice banks and industrial ammonia chillers."],
+      ["Across the building", "Air conditioning, air handling, ventilation, fire-rated and acoustic envelope."],
+      ["For its whole life", "Spare parts on the shelf in Doha and maintenance teams on call 24/7."]
+    ],
+    "fig_alt": "Isometric cutaway of a cold-storage facility showing a cold room, a freezer and a loading dock",
+    "fig_caption": "Fig. 01 — Facility cutaway",
+    "fig_v1": "Interactive 3D in v2",
+    "fig_v2": "Drag to orbit · click a part",
+    "label_cold": "02 COLD ROOM 0…+5 °C",
+    "label_freezer": "FREEZER −25 °C",
+    "label_dock": "01 DOCK DOOR",
+    "parts": {
+      "dock": ["Dock door & leveller", "Rapid and sectional doors, dock levellers and shelters by Loading Systems."],
+      "cold": ["Cold room", "Kingspan insulated panels with Polidoor doors, held at 0…+5 °C."],
+      "freezer": ["Freezer", "Low-temperature room at −18…−25 °C with Friga-Bohn evaporators."],
+      "plant": ["Plant & condensers", "Iceberg central racks, air-cooled condensers and ammonia chillers."],
+      "ahu": ["Air handling", "AHUs, fabric ducting and ventilation by Daikin, Sodeca and Dantherm."],
+      "racks": ["Racking", "Static and automated Stow racking, served by STILL forklifts."],
+      "van": ["24/7 service", "Maintenance crews and spare parts from our Doha counter."]
+    },
+    "fallback": "Live 3D stopped on this device. The drawing shows the same facility."
+  },
+  "solutions": {
+    "eyebrow": "03 · Solutions",
+    "title": "Six disciplines. One contractor.",
+    "lead": "One scope, one schedule, one warranty, from the first load calculation to the hundredth service visit.",
+    "items": [
+      {"tag": "Refrigeration", "title": "Cold rooms & refrigeration", "desc": "Commercial and industrial refrigeration, ammonia cooling and modular cold room assembly.", "brands": "Iceberg · Daikin · Friga-Bohn · Kingspan · Polidoor", "page": "cold-rooms"},
+      {"tag": "HVAC", "title": "Air conditioning & air handling", "desc": "Commercial and industrial A/C, fabric ducting, ecology units, smoke and ventilation fans.", "brands": "Daikin · Sodeca · Dantherm · Mercor · Prihoda"},
+      {"tag": "Envelope", "title": "Insulation, fire & hygiene", "desc": "Thermal and acoustic insulation, fire-rated boards and seals, insulated and hygienic panels.", "brands": "Thermobreak · Promat · Kingspan · Hygibreak · Pyrotek"},
+      {"tag": "Warehousing", "title": "Storage & material handling", "desc": "Static and automated racking, industrial doors and dock equipment, forklifts and pallet trucks.", "brands": "Stow · STILL · Loading Systems"},
+      {"tag": "Water & flow", "title": "Valves, copper & tanks", "desc": "Balancing and fluid control valves, copper tubes and fittings, geocellular rainwater tanks.", "brands": "Danfoss · Genebre · Halcor · Cross-Wave"}
+    ],
+    "service": {"tag": "After-sales", "title": "Spare parts & 24/7 service", "desc": "Refrigerants, fans and Uniweld tools on the counter in Doha. Maintenance crews around the clock.", "call": "Call maintenance"},
+    "more": "Explore"
+  },
+  "paths": {
+    "eyebrow": "04 · Where are you starting?",
+    "title": "Any size of cold.",
+    "items": [
+      ["Restaurants · retail · clinics", "One cold room", "Modular walk-in rooms with monoblock or silent condensing units, installed in days.", "Size my room"],
+      ["Food processing · pharma · logistics", "A complete facility", "Design-and-build cold stores: panels, plant, docks, racking and HVAC under one contract.", "Talk to engineering"],
+      ["Retail chains · distributors · GCC operators", "A regional network", "One standard across Qatar, UAE and KSA, backed by group companies in each market.", "See the group"]
+    ],
+    "sectors": ["Food processing", "Pharma & healthcare", "Logistics & 3PL", "Stadiums & venues", "Retail & hospitality", "Defence & infrastructure"]
+  },
+  "projects": {
+    "eyebrow": "05 · Selected projects",
+    "title": "Built into Qatar.",
+    "all": "All 12 references",
+    "scope": "[Scope delivered — to confirm with FTC]",
+    "items": [
+      ["albayt.jpg", "Stadium · Al Khor", "Al Bayt Stadium"],
+      ["hamad.jpg", "Healthcare · Doha", "Hamad Medical City"],
+      ["metro.jpg", "Transport · Doha", "Doha Metro — Red Line"],
+      ["gwc.jpg", "Logistics · Ras Laffan", "GWC Warehouses"],
+      ["alraed.jpg", "Food processing", "Al Raed Food & Fish Factory"],
+      ["moq.jpg", "Retail · Al Rayyan", "Mall of Qatar"]
+    ]
+  },
+  "services": {
+    "eyebrow": "06 · How we deliver",
+    "title": "One team from drawing to decade.",
+    "step": "Step",
+    "items": [
+      ["Engineering", "Load calculations, system selection, shop drawings and value engineering."],
+      ["Supply chain", "Direct partnerships with European manufacturers and stock held in Doha."],
+      ["Contracting", "Installation, testing and commissioning by our own crews."],
+      ["Maintenance", "Planned maintenance contracts and 24/7 emergency response."]
+    ]
+  },
+  "group": {
+    "eyebrow": "07 · The Farjallah group",
+    "title": "Local crews. Group strength.",
+    "lead": "FTC Qatar is the GCC hub of Farjallah Holding: over 20 companies building cold across the Middle East, Africa and Europe.",
+    "fig_alt": "Globe showing the Farjallah group offices with Doha as the hub",
+    "fig_v1": "Interactive globe in v2",
+    "fig_v2": "Drag to rotate · hover a city",
+    "hq": "HQ",
+    "items": [
+      ["Qatar", "FTC Qatar · BES Qatar · GCC HQ", "hq", 25.29, 51.53, "Doha"],
+      ["United Arab Emirates", "FTC M.E. · Dubai", "office", 25.2, 55.27, "Dubai"],
+      ["Saudi Arabia", "FTC Arabia", "office", 24.71, 46.68, "Riyadh"],
+      ["Lebanon", "FTC · Iceberg · ACS · OLS", "office", 33.89, 35.5, "Beirut"],
+      ["Jordan", "Loreen Cooling Equipment", "office", 31.95, 35.93, "Amman"],
+      ["Greece", "FTC Europe", "office", 37.98, 23.73, "Athens"],
+      ["Côte d’Ivoire", "Afrigel Ouest", "office", 5.36, -4.01, "Abidjan"]
+    ]
+  },
+  "lineage": {
+    "eyebrow": "08 · Eighty years of cold",
+    "title": "It started with a showcase.",
+    "items": [
+      ["1946", "Antoine Farjallah founds Iceberg, building refrigerated showcases."],
+      ["1975", "Farjallah Trading Company is set up for electro-mechanical refrigeration."],
+      ["2008", "FTC Qatar is founded in partnership with Abu Issa Holding."],
+      ["2017", "Building Envelope Solutions (BES) opens in Qatar."],
+      ["2023", "New company-owned GCC headquarters in Doha, 15 years in Qatar."],
+      ["2024", "FTC Arabia opens in the Kingdom of Saudi Arabia."]
+    ]
+  },
+  "brands_label": "Authorised partner of",
+  "rfq": {
+    "eyebrow": "09 · Request a quote",
+    "title": "Tell us the temperature.",
+    "lead": "An engineer replies within one working day with a first sizing and the next steps.",
+    "type": "Facility type",
+    "types": ["Cold room", "Cold store / warehouse", "Food processing", "Pharma / healthcare", "HVAC only"],
+    "temp": "Temperature",
+    "temps": ["Chilled 0…+5 °C", "Frozen −18…−25 °C", "Blast to −40 °C", "Comfort cooling"],
+    "area": "Area (m²)",
+    "area_ph": "e.g. 120",
+    "start": "Start date",
+    "email": "Work email",
+    "email_ph": "name@company.qa",
+    "send": "Send to engineering",
+    "whatsapp": "Or message us on WhatsApp",
+    "subject": "Quote request from ftc-qatar.com"
+  },
+  "footer": {
+    "big": "Your solution partner.",
+    "entity": "FTC Qatar W.L.L.",
+    "address": "Building 16, Street 653, Zone 57<br>West Industrial Area, Doha, Qatar",
+    "head": "Head office & spare parts",
+    "hours": "Sun–Thu · 8:00–17:30",
+    "maint": "Maintenance 24/7",
+    "warehouse": "Warehouse",
+    "group": "Group",
+    "copy": "© 2026 FTC Qatar W.L.L. · A Farjallah Holding company",
+    "careers": "Careers",
+    "privacy": "Privacy"
+  },
+  "quickbar": {"call": "24/7 call", "whatsapp": "WhatsApp", "quote": "Quote"},
+  "design": {
+    "open": "Design options",
+    "title": "Design options",
+    "note": "Preview only, for choosing the final look. Your choice is saved in this browser.",
+    "theme": "Theme",
+    "themes": {"ink": "Ink", "paper": "Paper", "steel": "Steel"},
+    "accent": "Accent",
+    "accents": {"cyan": "FTC Cyan", "ice": "Ice", "signal": "Signal", "navy": "Navy"},
+    "type": "Headlines",
+    "types": {"expanded": "Expanded", "standard": "Standard", "condensed": "Condensed"},
+    "shape": "Corners",
+    "shapes": {"sharp": "Sharp", "soft": "Soft"},
+    "copy": "Copy link to this look",
+    "copied": "Link copied",
+    "reset": "Reset"
+  },
+  "cold": {
+    "eyebrow": "Solution 01 · Refrigeration",
+    "title": "Cold rooms, built to the degree.",
+    "lead": "Modular walk-in chillers and freezers for kitchens, retail, clinics, food factories and cold stores. We assemble the panels, doors and refrigeration as one tested system, then maintain it.",
+    "spec": [["Chill", "0…+5 °C"], ["Freeze", "−18…−25 °C"], ["Panels", "Kingspan IPN"], ["Doors", "Polidoor · Boxcold"], ["Service", "24/7 in Qatar"]],
+    "anatomy_eyebrow": "What’s inside",
+    "anatomy_title": "Five parts. One tested system.",
+    "fig_alt": "Exploded view of a modular cold room: roof panel, wall panels, door, evaporator and condensing unit",
+    "fig_caption": "Fig. 02 — Anatomy of a cold room",
+    "fig_labels": ["01 ROOF PANEL", "02 WALL PANEL", "03 DOOR", "04 EVAPORATOR", "05 CONDENSING UNIT"],
+    "parts": [
+      ["Insulated roof & wall panels", "Kingspan controlled-environment panels for food, pharma, freezers and clean rooms."],
+      ["Hygienic finishes", "Hygibreak and Glasbord® with Surfaseal® that will not mould, rot or corrode."],
+      ["Cold storage doors", "Polidoor hinged and sliding doors, made from its own panels with in-house electronics."],
+      ["Evaporators", "Iceberg and Friga-Bohn units for low and medium temperature."],
+      ["Condensing units", "Air-cooled, water-cooled (Alfa Laval shell-and-tube) or compact silent units."]
+    ],
+    "choose_eyebrow": "Choose the system",
+    "choose_title": "The right plant for the room.",
+    "cols": ["System", "Best for", "Why choose it", "Partner"],
+    "rows": [
+      ["Monoblock unit", "A single walk-in room", "Very compact, so more usable space inside the room", "Iceberg"],
+      ["Silent condensing unit", "Restaurants, mini-markets", "Low noise where looks matter as much as reliability", "Iceberg"],
+      ["Central power rack", "Supermarkets, multi-room stores", "2–6 compressors on one rack, built for hard-to-reach sites", "Iceberg · Daikin"],
+      ["Industrial ammonia chiller", "Large cold stores, food plants", "Lowest life-cycle cost of any chiller over a 20-year cycle", "ACS (group)"]
+    ],
+    "process_eyebrow": "Process",
+    "process_title": "Survey to service.",
+    "process": [
+      ["Site survey", "Space, power, product and throughput."],
+      ["Load & design", "Cooling load, layout and system choice."],
+      ["Supply", "Panels, doors and plant from partner factories."],
+      ["Assembly", "Installed by FTC crews, not subcontracted."],
+      ["Commissioning", "Pull-down test and handover file."],
+      ["Maintenance", "Planned visits and 24/7 call-out."]
+    ],
+    "related_title": "Cold rooms in service.",
+    "datasheets": ["Datasheet · Modular cold rooms (PDF)", "Datasheet · Cold storage doors (PDF)"],
+    "related": [["alraed.jpg", "Food processing", "Al Raed Food & Fish Factory"], ["gwc.jpg", "Logistics", "GWC Warehouses, Ras Laffan"], ["hamad.jpg", "Healthcare", "Hamad Medical City"]],
+    "faq_title": "Questions we hear.",
+    "faq": [
+      ["How long does a modular cold room take?", "[Typical lead time and install days — to confirm with FTC.] Your quote includes a programme."],
+      ["Can one room switch between chill and freeze?", "[Answer from FTC engineering.]"],
+      ["Do you maintain rooms you didn’t install?", "[Answer from FTC maintenance.]"],
+      ["Which refrigerants do you stock?", "An extensive range on the shelf at our Doha spare-parts counter. [List to confirm.]"]
+    ],
+    "cta_title": "Size your cold room.",
+    "cta": "Start a request"
+  }
+}

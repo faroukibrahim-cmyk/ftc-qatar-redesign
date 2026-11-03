@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FTC design system v1</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=IBM+Plex+Sans+Arabic:wght@500;700&amp;display=swap">
+<style>
+body{margin:0;background:#060A0F}
+.d{font-family:'Archivo',sans-serif;font-stretch:125%;text-transform:uppercase;letter-spacing:-0.02em}
+.m{font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.14em}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1240px; box-sizing: border-box; padding: 64px; background: #060A0F; color: #EAF2F7; font-family: 'Archivo', sans-serif; display: flex; flex-direction: column; gap: 48px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<div><p class="m" style="margin: 0 0 14px; font-size: 12px; color: #04AFF0">Design system · v1</p><h1 class="d" style="margin: 0; font-size: 72px; font-weight: 800; line-height: 0.9">Engineered Cold</h1></div>
+<img src="/_blob/b131a00a3bde17d96fd053915a492457" alt="FTC Qatar logo" style="height: 72px; width: auto">
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 16px">
+<div><div style="height: 110px; border-radius: 8px; background: #060A0F; border: 1px solid #2A3744"></div><div class="m" style="font-size: 10px; margin-top: 10px">Ink<br><span style="color: #8FA3B3">#060A0F · ground</span></div></div>
+<div><div style="height: 110px; border-radius: 8px; background: #0B1118; border: 1px solid #2A3744"></div><div class="m" style="font-size: 10px; margin-top: 10px">Ink 2<br><span style="color: #8FA3B3">#0B1118 · raised</span></div></div>
+<div><div style="height: 110px; border-radius: 8px; background: #1E2833"></div><div class="m" style="font-size: 10px; margin-top: 10px">Rule<br><span style="color: #8FA3B3">#1E2833 · lines</span></div></div>
+<div><div style="height: 110px; border-radius: 8px; background: #8FA3B3"></div><div class="m" style="font-size: 10px; margin-top: 10px">Mist<br><span style="color: #8FA3B3">#8FA3B3 · 7.6:1</span></div></div>
+<div><div style="height: 110px; border-radius: 8px; background: #EAF2F7"></div><div class="m" style="font-size: 10px; margin-top: 10px">Frost<br><span style="color: #8FA3B3">#EAF2F7 · text</span></div></div>
+<div><div style="height: 110px; border-radius: 8px; background: #EEF3F6"></div><div class="m" style="font-size: 10px; margin-top: 10px">Paper<br><span style="color: #8FA3B3">#EEF3F6 · light</span></div></div>
+<div><div style="height: 110px; border-radius: 8px; background: #04AFF0"></div><div class="m" style="font-size: 10px; margin-top: 10px">FTC Cyan<br><span style="color: #8FA3B3">#04AFF0 · logo</span></div></div>
+<div><div style="height: 110px; border-radius: 8px; background: #00749F"></div><div class="m" style="font-size: 10px; margin-top: 10px">Deep Cyan<br><span style="color: #8FA3B3">#00749F · on paper</span></div></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; border-top: 1px solid #1E2833; padding-top: 36px">
+<div><div class="m" style="font-size: 10px; color: #8FA3B3; margin-bottom: 16px">Display · Archivo Expanded 800</div><div class="d" style="font-size: 56px; font-weight: 800; line-height: 0.9">Built to the degree.</div></div>
+<div><div class="m" style="font-size: 10px; color: #8FA3B3; margin-bottom: 16px">Body · Archivo 400 / 600</div><div style="font-size: 20px; line-height: 1.55; color: #C9D6DF">Designed, supplied, installed and kept running by one team in Qatar.</div><div class="m" style="font-size: 10px; color: #8FA3B3; margin: 22px 0 10px">Arabic · IBM Plex Sans Arabic</div><div dir="rtl" lang="ar" style="font-family: 'IBM Plex Sans Arabic', sans-serif; font-size: 30px; font-weight: 700">نهندس البرودة.</div></div>
+<div><div class="m" style="font-size: 10px; color: #8FA3B3; margin-bottom: 16px">Spec · JetBrains Mono 500</div><div class="m" style="font-size: 16px; line-height: 2">−25.0 °C · RH 85%<br>Panel 150 mm<br><span style="color: #04AFF0">01 · At the dock</span></div></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; border-top: 1px solid #1E2833; padding-top: 36px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 14px; align-items: flex-start">
+<div class="m" style="font-size: 10px; color: #8FA3B3">Buttons</div>
+<button type="button" class="m" style="font-size: 12px; font-weight: 600; background: #04AFF0; color: #060A0F; border: 0; padding: 18px 22px; border-radius: 6px">Request a quote</button>
+<button type="button" class="m" style="font-size: 12px; font-weight: 600; background: none; color: #EAF2F7; border: 1px solid #EAF2F7; padding: 17px 22px; border-radius: 6px">See how it works</button>
+<a href="#" class="m" style="font-size: 12px; color: #04AFF0; text-decoration: none">Text link →</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="m" style="font-size: 10px; color: #8FA3B3">Spec list</div>
+<dl style="margin: 0; border: 1px solid #1E2833; border-radius: 10px; padding: 4px 20px; background: #0B1118">
+<div style="display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #1E2833"><dt class="m" style="font-size: 10px; color: #8FA3B3">Freeze</dt><dd class="m" style="margin: 0; font-size: 12px">−18…−25 °C</dd></div>
+<div style="display: flex; justify-content: space-between; padding: 14px 0"><dt class="m" style="font-size: 10px; color: #8FA3B3">Service</dt><dd class="m" style="margin: 0; font-size: 12px; color: #04AFF0">24/7 in Qatar</dd></div>
+</dl>
+<label class="m" style="font-size: 10px; color: #8FA3B3; display: flex; flex-direction: column; gap: 8px">Field label<input type="text" placeholder="name@company.qa" style="font: 16px 'Archivo', sans-serif; background: #0B1118; color: #EAF2F7; border: 1px solid #2A3744; border-radius: 6px; padding: 14px"></label>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div class="m" style="font-size: 10px; color: #8FA3B3">Principles</div>
+<ol style="margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.65; color: #C9D6DF">
+<li>One accent: the logo’s own cyan. No gradients or glow.</li>
+<li>Real numbers in mono: temperatures, sizes, phone lines.</li>
+<li>Real photos of FTC sites; never stock or illustration.</li>
+<li>Motion explains the system and never decorates it.</li>
+<li>Every page works in Arabic RTL and at 390 px.</li>
+</ol>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
