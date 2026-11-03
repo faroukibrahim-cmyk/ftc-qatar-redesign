@@ -234,8 +234,8 @@ def home_body(t, v):
                 f'<div class="film-pin"><canvas class="film-canvas" aria-hidden="true"></canvas><div class="wrap film-ui">'
                 f'<div><p class="m eyebrow">{esc(fm["eyebrow"])}</p><h2 class="d h2" id="film-h" style="max-width:16ch">{esc(fm["title"])}</h2>'
                 f'<p class="m film-hint muted">{esc(fm["hint"])} ↓</p></div>'
-                f'<div style="position:relative"><ol class="film-steps">{fsteps}</ol><p class="m film-note">{esc(fm["note"])}</p>'
-                f'<div class="film-rail" aria-hidden="true"><span></span></div></div></div></div></section>')
+                f'<div style="position:relative"><ol class="film-steps">{fsteps}</ol>'
+                f'<div class="film-rail" aria-hidden="true"><span></span></div><p class="m film-note">{esc(fm["note"])}</p></div></div></div></section>')
     tl = "".join(f'<li><div class="d{" now" if a == "2008" else ""}">{num(a)}</div><p>{esc(b)}</p></li>' for a, b in ln["items"])
     brands = "".join(f"<span>{b}</span>" for b in BRANDS)
     opts = lambda xs: "".join(f"<option>{esc(x)}</option>" for x in xs)

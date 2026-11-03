@@ -275,11 +275,11 @@ html[dir="rtl"] .v2 .step[aria-current="step"] { box-shadow: inset -3px 0 0 var(
   background: linear-gradient(to bottom, rgb(6 10 15 / .7), rgb(6 10 15 / 0) 32%, rgb(6 10 15 / 0) 52%, rgb(6 10 15 / .82)); }
 .film.scrub .film-ui { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding-block: 104px 40px; }
 .film.scrub .film-steps { display: block; position: relative; min-height: 9em; margin: 0; }
-.film.scrub .film-steps li { position: absolute; inset-inline-start: 0; bottom: 0; max-width: 480px; opacity: 0; transform: translateY(14px); transition: opacity .45s, transform .45s; }
-.film.scrub .film-steps li.on { opacity: 1; transform: none; }
+.film.scrub .film-steps li { position: absolute; inset-inline-start: 0; bottom: 0; max-width: 480px; opacity: 0; transform: translateY(14px); transition: opacity .15s, transform .15s; }
+.film.scrub .film-steps li.on { opacity: 1; transform: none; transition: opacity .45s .12s, transform .45s .12s; }
 .film.scrub .film-steps img { display: none; }
 .film.scrub .film-steps .t { font-size: clamp(24px, 3vw, 36px); }
 .film.scrub .film-rail { display: block; height: 2px; background: rgb(234 242 247 / .2); margin-top: 24px; }
 .film-rail span { display: block; height: 100%; inline-size: 0; background: var(--acc); }
-.film.scrub .film-note { position: absolute; inset-inline-end: 0; bottom: 0; margin: 0; }
-@media (max-width: 760px) { .film.scrub .film-note { position: static; margin-top: 12px; } .film.scrub { height: 440vh; } }
+.film.scrub .film-note { margin: 12px 0 0; font-size: 11px; }
+@media (max-width: 760px) { .film.scrub { height: 440vh; } .film.scrub .film-ui { padding-block: 92px 84px; } .film.scrub .film-note { max-width: 55%; } }
