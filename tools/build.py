@@ -55,21 +55,81 @@ def cutaway_svg(t):
 
 
 def globe_svg(t):
+    """A true orthographic globe (no 3D needed): land dots from src/data/land-dots.json, graticule, and each office at
+    its real latitude/longitude with a great-circle arc from Doha. Centred so West Africa, Europe and the Gulf all show."""
+    import math
     g = t["group"]
-    arcs = "".join(f'<path d="M300 236 Q {q}" fill="none" stroke="var(--acc)" stroke-width="1.4"/>' for q in
-                   ["250 150 186 168", "240 120 160 132", "200 300 92 318", "320 220 330 246", "285 215 268 222", "250 190 206 184"])
-    pins = "".join(f'<circle cx="{x}" cy="{y}" r="4" fill="var(--acc)"/>' for x, y in
-                   [(330, 246), (268, 222), (186, 168), (206, 184), (160, 132), (92, 318)])
-    rings = "".join(f'<ellipse cx="240" cy="240" rx="{a}" ry="{b}" fill="none" stroke="var(--rule)"/>' for a, b in
-                    [(210, 70), (210, 140), (70, 210), (140, 210)])
-    return f'''<svg viewBox="0 0 480 480" role="img" aria-label="{esc(g["fig_alt"])}">
-<circle cx="240" cy="240" r="210" fill="var(--bg-2)" stroke="var(--rule)"/>{rings}
-<line x1="30" y1="240" x2="450" y2="240" stroke="var(--rule)"/>{arcs}
-<circle cx="300" cy="236" r="14" fill="none" stroke="var(--fg)" stroke-opacity="0.5"/>
-<circle cx="300" cy="236" r="5" fill="var(--fg)"/>{pins}
-<text x="312" y="226" fill="var(--fg)" font-family="JetBrains Mono, IBM Plex Sans Arabic, monospace" font-size="11">{esc(g["items"][0][5])} · {esc(g["hq"])}</text>
-</svg>'''
+    R, C, LON0, LAT0 = 210, 240, 28.0, 22.0
+    l0, p0 = math.radians(LON0), math.radians(LAT0)
 
+    def proj(lat, lon):
+        f, l = math.radians(lat), math.radians(lon)
+        cosc = math.sin(p0) * math.sin(f) + math.cos(p0) * math.cos(f) * math.cos(l - l0)
+        x = R * math.cos(f) * math.sin(l - l0)
+        y = R * (math.cos(p0) * math.sin(f) - math.sin(p0) * math.cos(f) * math.cos(l - l0))
+        return C + x, C - y, cosc > 0
+
+    def vec(lat, lon):
+        f, l = math.radians(lat), math.radians(lon)
+        return (math.cos(f) * math.cos(l), math.cos(f) * math.sin(l), math.sin(f))
+
+    def unvec(v):
+        x, y, z = v
+        return math.degrees(math.asin(max(-1, min(1, z)))), math.degrees(math.atan2(y, x))
+
+    def line(pts):
+        out, pen = [], False
+        for lat, lon in pts:
+            x, y, vis = proj(lat, lon)
+            if vis:
+                out.append(f'{"L" if pen else "M"}{x:.1f} {y:.1f}'); pen = True
+            else:
+                pen = False
+        return "".join(out)
+
+    dots = json.loads((SRC / "data/land-dots.json").read_text())
+    land = "".join(f"M{x:.1f} {y:.1f}h0" for x, y, vis in (proj(dots[k], dots[k + 1]) for k in range(0, len(dots), 2)) if vis)
+    grat = "".join(line([(lat, lon / 2) for lon in range(-360, 361, 4)]) for lat in range(-60, 61, 30))
+    grat += "".join(line([(lat / 2, lon) for lat in range(-180, 181, 4)]) for lon in range(-180, 180, 30))
+    items = [it for it in g["items"]]
+    hq = next(it for it in items if it[2] == "hq")
+    a = vec(hq[3], hq[4])
+    arcs, pins, labels = "", "", ""
+    for name, co, kind, lat, lon, city in items:
+        x, y, vis = proj(lat, lon)
+        if not vis:
+            continue
+        if kind != "hq":
+            v = vec(lat, lon)
+            om = math.acos(max(-1, min(1, sum(p * q for p, q in zip(a, v)))))
+            pts = []
+            for s in range(41):
+                f = s / 40
+                k1, k2 = (math.sin((1 - f) * om) / math.sin(om), math.sin(f * om) / math.sin(om)) if om else (1 - f, f)
+                pts.append(unvec(tuple(k1 * p + k2 * q for p, q in zip(a, v))))
+            # lift the arc off the surface a little so it reads as a route
+            d = []
+            for s, (la, lo) in enumerate(pts):
+                px, py, _ = proj(la, lo)
+                lift = 1 + 0.10 * math.sin(math.pi * s / 40) * min(1, om * 2)
+                d.append(f'{"M" if s == 0 else "L"}{C + (px - C) * lift:.1f} {C + (py - C) * lift:.1f}')
+            arcs += f'<path d="{"".join(d)}" fill="none" stroke="var(--acc)" stroke-width="1.4" stroke-linecap="round"/>'
+            pins += f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="var(--acc)"/>'
+            # labels sit to the west of their pin, except where that would collide with the Doha HQ marker
+            east = lon > hq[4]
+            lx, ly, anchor = (x + 8, y + 14, "start") if east else (x - 8, y + 4, "end")
+            labels += f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="{anchor}" fill="var(--fg)" fill-opacity="0.75" font-family="JetBrains Mono, IBM Plex Sans Arabic, monospace" font-size="10">{esc(city)}</text>'
+        else:
+            pins += (f'<circle cx="{x:.1f}" cy="{y:.1f}" r="13" fill="none" stroke="var(--fg)" stroke-opacity="0.5"/>'
+                     f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="var(--fg)"/>')
+            labels += f'<text x="{x + 16:.1f}" y="{y - 8:.1f}" fill="var(--fg)" font-family="JetBrains Mono, IBM Plex Sans Arabic, monospace" font-size="11">{esc(city)} · {esc(g["hq"])}</text>'
+    return f'''<svg viewBox="0 0 480 480" role="img" aria-label="{esc(g["fig_alt"])}">
+<defs><radialGradient id="gl" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="var(--bg-2)"/><stop offset="1" stop-color="var(--bg)"/></radialGradient></defs>
+<circle cx="{C}" cy="{C}" r="{R}" fill="url(#gl)" stroke="var(--rule-2)"/>
+<path d="{grat}" fill="none" stroke="var(--rule)" stroke-width="0.6"/>
+<path d="{land}" stroke="var(--mist)" stroke-opacity="0.55" stroke-width="2.6" stroke-linecap="round"/>
+{arcs}{pins}{labels}
+</svg>'''
 
 def anatomy_svg(t):
     c = t["cold"]; L = c["fig_labels"]
