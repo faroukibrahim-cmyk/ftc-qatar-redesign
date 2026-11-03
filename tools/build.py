@@ -18,6 +18,7 @@ PHONE_HEAD, PHONE_MAINT, PHONE_WH = "+974 4144 1800", "+974 3370 8096", "+974 31
 # {code} is replaced with the visitor's invite code. Placeholder until FTC's office is set up.
 OV_JOIN = "https://officeverse.es/?join={code}"
 OV_SITE = "https://officeverse.es/"
+V2_URL = "https://ftcdemo.sandruci.com"   # the 3D version; v1 links to it from its 2D figures
 WHATSAPP = "https://wa.me/97441441800"  # live site's wa.me/03035959 has no country code; confirm the real WhatsApp line with FTC
 esc = html.escape
 
@@ -134,18 +135,17 @@ def page(t, v, slug, title, desc, body, site_url):
     section = "solutions" if (top in PILLARS or top in LINES or top == "solutions") else top
     nav_html = "".join(f'<a href="{h}"' + (' aria-current="page"' if k == section else "") + f'>{esc(label)}</a>' for k, h, label in links)
     sitemap = "".join(f'<a href="{home}{p["slug"]}/">{esc(L(p["tag"], lang))}</a><br>' for p in CAT["pillars"])
-    scripts = '<script src="/assets/js/site.js" defer></script><script src="/assets/js/motion.js" defer></script>'
+    scripts = '<script src="/assets/js/site.js" defer></script><script src="/assets/js/motion.js" defer></script><script type="module" src="/assets/js/sound.js"></script>'
     if v == "v2":
         scripts += ('<script type="importmap">{"imports":{"three":"/assets/vendor/three.module.min.js","three/addons/":"/assets/vendor/jsm/"}}</script>'
                     '<script type="module" src="/assets/js/film.js"></script>'
-                    '<script type="module" src="/assets/js/cutaway.js"></script><script type="module" src="/assets/js/globe.js"></script>'
-                    '<script type="module" src="/assets/js/sound.js"></script>')
+                    '<script type="module" src="/assets/js/cutaway.js"></script><script type="module" src="/assets/js/globe.js"></script>')
     f = t["footer"]
-    # v2: optional sound (src/js/v2/sound.js), off by default
+    # optional sound (src/js/v2/sound.js), off by default; v1 is v2 without the 3D, so it has it too
     sound_btn = (f'<button type="button" class="snd m" data-sound title="{esc(L(CAT["ui"]["sound_on"], lang))}" aria-pressed="false" data-on="{esc(L(CAT["ui"]["sound_on"], lang))}" data-off="{esc(L(CAT["ui"]["sound_off"], lang))}">'
                  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
                  '<path d="M4 9h4l5-4v14l-5-4H4z"/><path class="w1" d="M16 9.5a3.5 3.5 0 010 5"/><path class="w2" d="M18.5 7a7 7 0 010 10"/></svg>'
-                 f'<span class="snd-l">{esc(L(CAT["ui"]["sound_on"], lang))}</span></button>') if v == "v2" else ""
+                 f'<span class="snd-l">{esc(L(CAT["ui"]["sound_on"], lang))}</span></button>')
     return f'''<!doctype html>
 <html lang="{lang}" dir="{t["dir"]}">
 <head>
@@ -227,7 +227,7 @@ def home_body(t, v):
                f'<div class="stage-phase m" aria-hidden="true"></div><div class="part-card" role="status" hidden></div></div>'
                f'<figcaption class="m"><span>{esc(j["fig_caption"])}</span><span class="acc">{esc(j["fig_v2"])}</span></figcaption>{pcards}</figure>')
     else:
-        fig = f'<figure class="fig">{cutaway_svg(t)}<figcaption class="m"><span>{esc(j["fig_caption"])}</span><span class="acc">{esc(j["fig_v1"])}</span></figcaption>{pcards}</figure>'
+        fig = f'<figure class="fig">{cutaway_svg(t)}<figcaption class="m"><span>{esc(j["fig_caption"])}</span><a class="acc" href="{V2_URL}/{lang}/#journey">{esc(j["fig_v1"])} →</a></figcaption>{pcards}</figure>'
     cells = ""
     for i, it in enumerate(s["items"]):
         it = dict(it, page=["refrigeration", "hvac", "building-materials", "warehousing", "valves-copper"][i])
@@ -258,7 +258,7 @@ def home_body(t, v):
         for c, co, kind, lat, lon, city in g["items"])
     gfig = (f'<figure style="margin:0"><div class="globe" id="globe"><div class="poster">{globe_svg(t)}</div><div class="pin-card" hidden></div></div>'
             f'<figcaption class="m muted" style="margin-top:12px">{esc(g["fig_v2"])}</figcaption></figure>') if v == "v2" else \
-           f'<figure style="margin:0"><div style="max-width:520px">{globe_svg(t)}</div><figcaption class="m muted" style="margin-top:12px">{esc(g["fig_v1"])}</figcaption></figure>'
+           f'<figure style="margin:0"><div style="max-width:520px">{globe_svg(t)}</div><figcaption class="m muted" style="margin-top:12px"><a class="acc" href="{V2_URL}/{lang}/#group">{esc(g["fig_v1"])} →</a></figcaption></figure>'
     film = ""
     if v == "v2":
         fm = t["film"]
@@ -275,7 +275,7 @@ def home_body(t, v):
     opts = lambda xs: "".join(f"<option>{esc(x)}</option>" for x in xs)
     # v2 plays FTC's own warehouse footage behind the hero; site.js drops it for reduced motion / data saver
     video = ('<video class="bgimg" data-hero-video autoplay muted loop playsinline preload="metadata" poster="/assets/img/hero.jpg" aria-hidden="true">'
-             '<source src="/assets/img/hero-loop.mp4" type="video/mp4"></video>') if v == "v2" else ""
+             '<source src="/assets/img/hero-loop.mp4" type="video/mp4"></video>')
     return f'''
 <section class="hero dark" id="top"><img class="bgimg" src="/assets/img/hero.jpg" alt="" fetchpriority="high" width="1280" height="720">{video}<div class="wrap">
 <p class="m eyebrow">{esc(h["eyebrow"])}</p><h1 class="d">{esc(h["title"])}</h1>
@@ -442,7 +442,7 @@ def logo_strip(t):
 def brochure_band(t, v):
     lang, u = t["lang"], CAT["ui"]
     vid = ('<video class="bgimg" data-lazy-video muted loop playsinline preload="none" poster="/assets/img/brochure.jpg" aria-hidden="true">'
-           '<source data-src="/assets/img/brochure-loop.mp4" type="video/mp4"></video>') if v == "v2" else ""
+           '<source data-src="/assets/img/brochure-loop.mp4" type="video/mp4"></video>')
     return (f'<section class="broch dark"><img class="bgimg" src="/assets/img/brochure.jpg" alt="" loading="lazy" width="1280" height="720">{vid}'
             f'<div class="wrap"><h2 class="d">{esc(L(u["brochure_title"], lang))}</h2><p class="lead">{esc(L(u["brochure_lead"], lang))}</p>'
             f'<a class="btn btn-p" href="/assets/ftc-qatar-brochure.pdf" download>{esc(L(u["download"], lang))} · PDF</a></div></section>')
@@ -646,14 +646,13 @@ def build(site_urls):
         (out / "assets").mkdir(parents=True)
         shutil.copytree(SRC / "css", out / "assets/css")
         shutil.copytree(SRC / "img", out / "assets/img")
-        if v == "v1":
-            for f in ["hero-loop.mp4", "brochure-loop.mp4"]: (out / "assets/img" / f).unlink()
         (out / "assets/js").mkdir()
         for f in ["site.js", "motion.js"]: shutil.copy(SRC / "js" / f, out / "assets/js" / f)
+        shutil.copy(SRC / "js/v2/sound.js", out / "assets/js/sound.js")
         if (ROOT / "research/ftc-brochure-current.pdf").exists():
             shutil.copy(ROOT / "research/ftc-brochure-current.pdf", out / "assets/ftc-qatar-brochure.pdf")
         if v == "v2":
-            for f in ["cutaway.js", "globe.js", "film.js", "sound.js"]: shutil.copy(SRC / "js/v2" / f, out / "assets/js" / f)
+            for f in ["cutaway.js", "globe.js", "film.js"]: shutil.copy(SRC / "js/v2" / f, out / "assets/js" / f)
             shutil.copytree(SRC / "vendor/jsm", out / "assets/vendor/jsm")
             shutil.copytree(SRC / "models", out / "assets/models")
             if (SRC / "film").exists(): shutil.copytree(SRC / "film", out / "assets/film")

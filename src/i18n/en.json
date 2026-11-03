@@ -54,7 +54,7 @@
     ],
     "fig_alt": "Isometric cutaway of a cold-storage facility showing a cold room, a freezer and a loading dock",
     "fig_caption": "Fig. 01 — Facility cutaway",
-    "fig_v1": "Interactive 3D in v2",
+    "fig_v1": "See it in 3D",
     "fig_v2": "Drag to orbit · click a part",
     "label_cold": "02 COLD ROOM 0…+5 °C",
     "label_freezer": "FREEZER −25 °C",
@@ -124,7 +124,7 @@
     "title": "Local crews. Group strength.",
     "lead": "FTC Qatar is the GCC hub of Farjallah Holding: over 20 companies building cold across the Middle East, Africa and Europe.",
     "fig_alt": "Globe showing the Farjallah group offices with Doha as the hub",
-    "fig_v1": "Interactive globe in v2",
+    "fig_v1": "See the interactive globe",
     "fig_v2": "Drag to rotate · hover a city",
     "hq": "HQ",
     "items": [
